@@ -3,20 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilos/estilos.css">
     <title>Gestion de memoria</title>
 </head>
 <body>
     <h1 class="titulo"> Simulador -- Gestion de memoria</h1>
     <div class="caja-principal">
-        <div class="caja-menu">
-                <h2 class="sub-titulo">Escoja el tipo de particion de memoria</h2>
-                <div class="opciones">
-                    <div class="sub-opciones"><input type="radio" name="particion" id="Estatica"><label for="Estatica">Particion Estatica</label></div>
-                    <div class="sub-opciones"><input type="radio" name="particion" id="Dinamica"><label for="Dinamica">Particion Dinamica</label></div>
-                    <div class="sub-opciones"><input type="radio" name="particion" id="DinamicaCom"><label for="DinamicaCom">Particion Dinamica compacta</label></div>
-                    <div class="sub-opciones"><input type="radio" name="particion" id="EstaticaVar"><label for="EstaticaVar">Particion Estatica Variable</label></div>
-                </div>                
-                <button>crear</button>
+        <div class="memoria">
+            <div class="repr-memoria"></div>
+        </div>
+        <div class="configuraciones">
+            <div class="cont-conf procesos">
+                <table class="tb-procesos">
+                    <thead class="tb-proc-enc">
+                        <th>Proceso</th>
+                        <th>Tama;o</th>
+                        <th>" "</th>
+                    </thead>
+                    <tbody class="tb-proc-cu">
+                        <tr class="tb-proc-cu-item">
+                            <td class="part-item">calculadora</td>
+                            <td class="part-item">321.321</td>
+                            <td class="part-item"><button>Terminar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="cont-conf programa">
+                <table class="tb-procesos">
+                    <thead class="tb-proc-enc">
+                        <th>Programa</th>
+                        <th>.text</th>
+                        <th>.data</th>
+                        <th>.bss</th>
+                        <th>memoria <br>a usar</th>
+                        <th>" "</th>
+                    </thead>
+                    <tbody class="tb-proc-cu">
+                        <tr class="tb-proc-cu-item">
+                            <td class="part-item">calculadora</td>
+                            <td class="part-item">120.156</td>
+                            <td class="part-item">89.255</td>
+                            <td class="part-item">100.025</td>
+                            <td class="part-item">321.321</td>
+                            <td class="part-item"><button>Iniciar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="cont-conf ajuste">
+                <h2>Tipo de ajuste:</h2>
+                <p>""</p>
+                <button class="btn-ajuste">Primer Ajuste</button>
+                <button class="btn-ajuste">Peor Ajuste</button>
+                <button class="btn-ajuste">Mejor Ajuste</button>
+            </div>
+            <div class="cont-conf botones">
+
+            </div>
         </div>
     </div>
 </body>

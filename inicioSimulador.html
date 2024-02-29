@@ -1,0 +1,51 @@
+<div class='caja-menu'>
+    <h2 class='sub-titulo'>Escoja el tipo de particion de memoria</h2>
+    <div class='opciones'>
+        <div class='sub-opciones'><input type='radio' name='particion' id='Estatica'><label for='Estatica'>Particion Estatica</label></div>
+        <div class='sub-opciones'><input type='radio' name='particion' id='Dinamica'><label for='Dinamica'>Particion Dinamica</label></div>
+        <div class='sub-opciones'><input type='radio' name='particion' id='DinamicaCom'><label for='DinamicaCom'>Particion Dinamica compacta</label></div>
+        <div class='sub-opciones'><input type='radio' name='particion' id='EstaticaVar'><label for='EstaticaVar'>Particion Estatica Variable</label></div>
+    </div>                
+    <button class='crear'>crear</button>
+</div>
+
+.caja-principal{
+    display: flex;
+    margin-top: 90px;
+    justify-content: center;
+}
+
+.caja-menu{
+    display: grid;
+    width: 500px;
+    height: 500px;
+    border: solid black 1px;
+    border-radius: 2rem;
+    justify-items: center;
+}
+
+.sub-titulo{
+    text-align: center;
+}
+
+.opciones{
+    display: grid;
+    width: 60%;
+    height: 60%;
+    margin: 20px;
+    align-content: center;
+    row-gap: 20px;
+    padding-left: 50px;
+}
+
+.crear{
+    height: 50px;
+    width: 100px;
+    background-color: white;
+    border: 1px black solid;
+    border-radius: 0.5rem; 
+}
+
+.crear:hover{
+    background-color: aquamarine;
+}
