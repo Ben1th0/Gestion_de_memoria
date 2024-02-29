@@ -1,0 +1,154 @@
+<div class="memoria">
+    <h2>16 MG</h2>
+    <div class="memoria-graf">
+        <div class="repr-memoria"></div>
+        <div class="divi-memoria"></div>
+    </div>
+</div>
+<div class="configuraciones">
+    <div class="cont-conf procesos">
+        <table class="tb-procesos">
+            <thead class="tb-proc-enc">
+                <th>Proceso</th>
+                <th>Tama;o</th>
+                <th>" "</th>
+            </thead>
+            <tbody class="tb-proc-cu">
+                <tr class="tb-proc-cu-item">
+                    <td class="part-item">calculadora</td>
+                    <td class="part-item">321.321</td>
+                    <td class="part-item"><button>Terminar</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="cont-conf programa">
+        <table class="tb-procesos">
+            <thead class="tb-proc-enc">
+                <th>Programa</th>
+                <th>.text</th>
+                <th>.data</th>
+                <th>.bss</th>
+                <th>memoria <br>a usar</th>
+                <th>" "</th>
+            </thead>
+            <tbody class="tb-proc-cu">
+                <tr class="tb-proc-cu-item">
+                    <td class="part-item">calculadora</td>
+                    <td class="part-item">120.156</td>
+                    <td class="part-item">89.255</td>
+                    <td class="part-item">100.025</td>
+                    <td class="part-item">321.321</td>
+                    <td class="part-item"><button>Iniciar</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="cont-conf ajuste">
+        <h2>Tipo de ajuste:</h2>
+        <p>""</p>
+        <button class="btn-ajuste">Primer Ajuste</button>
+        <button class="btn-ajuste">Peor Ajuste</button>
+        <button class="btn-ajuste">Mejor Ajuste</button>
+    </div>
+    <div class="cont-conf botones">
+        <button class="btn-boton">Agregar programa</button>
+        <button class="btn-boton">Volver al inicio</button>
+    </div>
+</div>
+
+
+
+.caja-principal{
+    display: grid;
+    margin-top: 90px;
+    grid-template-columns: 1fr 2fr;
+}
+
+.memoria{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 9fr;
+    padding: 10px 100px;
+    justify-items: center;
+}
+
+.memoria-graf{
+    display: flex;
+}
+
+.divi-memoria{
+    border: solid black 1px;
+    height: 95%;
+    width: 100px;
+}
+
+.repr-memoria{
+    border: solid black 1px;
+    height: 95%;
+    width: 200px;
+}
+
+.configuraciones{
+    display: grid;
+    grid-template-columns: repeat(10,1fr);
+    grid-template-rows: repeat(10,1fr);
+    gap: 10px;
+    padding: 20px;
+}
+
+.cont-conf{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border: solid 1px black;
+    border-radius: 0.5rem;
+}
+
+.procesos{
+    grid-column: span 4;
+    grid-row: span 5;
+}
+
+.programa{
+    grid-column: span 6;
+    grid-row: span 5;
+}
+
+.ajuste{
+    display: grid;
+    justify-items: center;
+    grid-column: span 5;
+    grid-row: span 5;
+}
+
+.botones{
+    display: grid;
+    align-items: center;
+    grid-column: span 5;
+    grid-row: span 5;
+}
+
+.tb-procesos {
+    width: 95%;
+    margin: 10px;
+    border-collapse: collapse;
+}
+
+.tb-proc-enc{
+    height: 20%;
+    border-bottom: 1px solid black;
+}
+
+.part-item{
+    text-align: center;
+}
+
+.btn-ajuste, .btn-boton{
+    display: block;
+    width: 100%;
+    height: 40px;
+    display: block;
+    margin: 5%;
+}   
