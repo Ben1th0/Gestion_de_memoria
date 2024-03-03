@@ -8,6 +8,34 @@
     </div>                
     <button class='crear'>crear</button>
 </div>
+<div id="miniVentana" class="miniVentana">
+    <div class="contenido">
+      <span class="cerrar" onclick="cerrarMiniVentana()">X</span>
+      <h2>Particionar memoria</h2>
+      <p>Coloca las dimenciones de la memoria</p>
+      <div class="particiones">
+          <div class="part-creadas">
+              <h3>particiones <br>creadas</h3>
+              <ul>
+                  <li>1400</li>
+                  <li>1552</li>
+                  <li>15654</li>
+              </ul>
+          </div>
+          <div class="part-disponible">
+              <h3>disponible</h3>
+              <p class="part-dispo-text">1656</p>
+          </div>
+      </div>
+      <div class="crear-particiones">
+          <input type="number" name="tamPart" id="tamPart" min="0" step="1" placeholder="tamaño de particion">
+          <button for="tamPart">Crear<br>particion</button>
+      </div>
+      <button class="crear-simu" id="crear-simu">Crear simulador</button>
+    </div>
+    <script src="JavaScript/controlador.js"></script>
+  </div>
+
 
 .caja-principal{
     display: flex;
@@ -48,4 +76,49 @@
 
 .crear:hover{
     background-color: aquamarine;
+}
+
+/*  */
+
+.miniVentana {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999; 
+}
+  
+.contenido {
+    position: relative;
+}
+  
+.cerrar {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+  
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.particiones{
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid black;
+}
+
+.part-disponible{
+    display: grid;
+    justify-content: center;
+    text-align: center;
 }
