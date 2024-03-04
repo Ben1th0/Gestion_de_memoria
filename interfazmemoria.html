@@ -7,43 +7,62 @@
 </div>
 <div class="configuraciones">
     <div class="cont-conf procesos">
+        <h2>Procesos</h2>
+        <!-- Agregar formulario para agregar procesos -->
+        <form id="formProceso">
+            <label for="nombreProceso">Proceso:</label>
+            <input type="text" id="nombreProceso" required>
+            <label for="tamanoProceso">Tamaño:</label>
+            <input type="number" id="tamanoProceso" min="0" step="1" required>
+            <button type="button" onclick="agregarProcesoManual()">Agregar Proceso</button>
+        </form>
+        <!-- Tabla de procesos existentes -->
         <table class="tb-procesos">
+            <!-- Encabezado de la tabla -->
             <thead class="tb-proc-enc">
                 <th>Proceso</th>
-                <th>Tama;o</th>
-                <th>" "</th>
+                <th>Tamaño</th>
+                <th>Acciones</th>
             </thead>
-            <tbody class="tb-proc-cu">
-                <tr class="tb-proc-cu-item">
-                    <td class="part-item">calculadora</td>
-                    <td class="part-item">321.321</td>
-                    <td class="part-item"><button>Terminar</button></td>
-                </tr>
+            <!-- Cuerpo de la tabla -->
+            <tbody class="tb-proc-cu" id="tablaProcesos">
+                <!-- Filas de procesos se agregarán dinámicamente aquí -->
             </tbody>
         </table>
     </div>
-    <div class="cont-conf programa">
-        <table class="tb-procesos">
-            <thead class="tb-proc-enc">
-                <th>Programa</th>
-                <th>.text</th>
-                <th>.data</th>
-                <th>.bss</th>
-                <th>memoria <br>a usar</th>
-                <th>" "</th>
-            </thead>
-            <tbody class="tb-proc-cu">
-                <tr class="tb-proc-cu-item">
-                    <td class="part-item">calculadora</td>
-                    <td class="part-item">120.156</td>
-                    <td class="part-item">89.255</td>
-                    <td class="part-item">100.025</td>
-                    <td class="part-item">321.321</td>
-                    <td class="part-item"><button>Iniciar</button></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+</div>
+<div class="cont-conf programa" id="contPrograma">
+    <h2>Programa</h2>
+    <!-- Agregar formulario para agregar programas -->
+    <form id="formPrograma">
+        <label for="nombrePrograma">Nombre:</label>
+        <input type="text" id="nombrePrograma" required>
+        <label for="textPrograma">.text:</label>
+        <input type="number" id="textPrograma" min="0" step="1" required>
+        <label for="dataPrograma">.data:</label>
+        <input type="number" id="dataPrograma" min="0" step="1" required>
+        <label for="bssPrograma">.bss:</label>
+        <input type="number" id="bssPrograma" min="0" step="1" required>
+        <label for="memoriaPrograma">Memoria a usar:</label>
+        <input type="number" id="memoriaPrograma" min="0" step="1" required>
+        <button type="button" onclick="agregarPrograma()">Agregar Programa</button>
+    </form>
+    <!-- Tabla de programas existentes -->
+    <table class="tb-procesos">
+        <!-- Encabezado de la tabla -->
+        <thead class="tb-proc-enc">
+            <th>Programa</th>
+            <th>.text</th>
+            <th>.data</th>
+            <th>.bss</th>
+            <th>Memoria a usar</th>
+            <th>" "</th>
+        </thead>
+        <!-- Cuerpo de la tabla -->
+        <tbody class="tb-proc-cu" id="tablaProgramas">     
+        </tbody>
+    </table>
+</div>
     <div class="cont-conf ajuste">
         <h2>Tipo de ajuste:</h2>
         <p>""</p>
@@ -56,7 +75,6 @@
         <button class="btn-boton" id="volver-inicio">Volver al inicio</button>
     </div>
 </div>
-
 
 
 .caja-principal{

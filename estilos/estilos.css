@@ -119,31 +119,81 @@ h1{
     width: 200px;
 }
 
-.configuraciones{
+.configuraciones {
     display: grid;
-    grid-template-columns: repeat(10,1fr);
-    grid-template-rows: repeat(10,1fr);
+    grid-template-columns: repeat(10, 1fr);
     gap: 10px;
     padding: 20px;
 }
 
-.cont-conf{
+.cont-conf {
     display: flex;
-    justify-content: center;
+    flex-direction: column;  /* Ajuste para apilar los elementos verticalmente */
+    align-items: center;      /* Centrar los elementos horizontalmente */
+    justify-content: center;  /* Centrar los elementos verticalmente */
     width: 100%;
     height: 100%;
     border: solid 1px black;
     border-radius: 0.5rem;
 }
 
-.procesos{
+.procesos {
     grid-column: span 4;
     grid-row: span 5;
+}
+
+#formProceso {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 
 .programa{
     grid-column: span 6;
     grid-row: span 5;
+}
+.cont-conf.programas {
+    grid-column: span 4;
+    grid-row: span 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border: solid 1px black;
+    border-radius: 0.5rem;
+}
+
+#formPrograma {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);  
+    gap: 10px;
+}
+
+#formPrograma label,
+#formPrograma input {
+    width: 100%;  
+}
+
+#formPrograma button {
+    width: 100%;  
+}
+
+.tb-procesos {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.tb-proc-enc th, .tb-proc-cu td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+
+#tablaProgramasBody {
+    text-align: center;
 }
 
 .ajuste{
