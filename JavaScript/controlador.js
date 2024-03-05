@@ -1,2 +1,5 @@
-document.getElementById('crear').addEventListener('click', abrirMiniVentana);
-document.getElementById('crear-simu').addEventListener('click', crearsimulador); 
+import * as funciones from '.funciones';
+import * as memoria from './Clases/memoria';
+
+funciones.volverInicio();
+funciones.crearsimulador();

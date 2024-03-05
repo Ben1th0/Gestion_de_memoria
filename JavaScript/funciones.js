@@ -118,6 +118,14 @@ function VenAgrPrograma(){
     document.getElementById('miniVentana').style.display = 'block';
 }
 
+//funcion para crear particiones
+function crearParticion(){
+    var parttam = document.querySelector(".tamPart");
+    var lista = document.querySelector(".List-part");
+
+    lista.innerHTML = `<li>${parttam.value}</li>`;
+}
+
 //funcion para iniciar el simulador
 function crearsimulador(){
     document.getElementById("caja-principal").innerHTML = "";
@@ -129,74 +137,76 @@ function crearsimulador(){
         <div class="repr-memoria"></div>
         <div class="divi-memoria"></div>
     </div>
-</div>
-<div class="configuraciones">
-    <div class="cont-conf procesos">
-        <h2>Procesos</h2>
+    </div>
+    <div class="configuraciones">
+        <div class="cont-conf procesos">
+            <h2>Procesos</h2>
+            
+            <!-- Tabla de procesos existentes -->
+            <table class="tb-procesos">
+                <!-- Encabezado de la tabla -->
+                <thead class="tb-proc-enc">
+                    <th>Proceso</th>
+                    <th>Tamaño</th>
+                    <th>Acciones</th>
+                </thead>
+                <!-- Cuerpo de la tabla -->
+                <tbody class="tb-proc-cu" id="tablaProcesos">
+                    <!-- Filas de procesos se agregarán dinámicamente aquí -->
+                </tbody>
+            </table>
+        </div>
         
-        <!-- Tabla de procesos existentes -->
+
+        <div class="cont-conf programa" id="contPrograma">
+        <h2>Programa</h2>
+        <!-- Agregar formulario para agregar programas -->
+        <div id="miniVentana" class="miniVentana">
+            <span class="cerrar" onclick="cerrarMiniVentana()">X</span>
+            <div>
+                <form id="formPrograma">
+                    <label for="nombrePrograma">Nombre:</label>
+                    <input type="text" id="nombrePrograma" required>
+                    <label for="textPrograma">.text:</label>
+                    <input type="number" id="textPrograma" min="0" step="1" required>
+                    <label for="dataPrograma">.data:</label>
+                    <input type="number" id="dataPrograma" min="0" step="1" required>
+                    <label for="bssPrograma">.bss:</label>
+                    <input type="number" id="bssPrograma" min="0" step="1" required>
+                    <label for="memoriaPrograma">Memoria a usar:</label>
+                    <input type="number" id="memoriaPrograma" min="0" step="1" required>
+                    <button type="button" onclick="agregarPrograma()">Agregar Programa</button>
+                </form>
+            </div> 
+        </div>
+        <!-- Tabla de programas existentes -->
         <table class="tb-procesos">
             <!-- Encabezado de la tabla -->
             <thead class="tb-proc-enc">
-                <th>Proceso</th>
-                <th>Tamaño</th>
-                <th>Acciones</th>
+                <th>Programa</th>
+                <th>.text</th>
+                <th>.data</th>
+                <th>.bss</th>
+                <th>Memoria a usar</th>
+                <th>" "</th>
             </thead>
             <!-- Cuerpo de la tabla -->
-            <tbody class="tb-proc-cu" id="tablaProcesos">
-                <!-- Filas de procesos se agregarán dinámicamente aquí -->
+            <tbody class="tb-proc-cu" id="tablaProgramas">     
             </tbody>
         </table>
     </div>
-    
-
-    <div class="cont-conf programa" id="contPrograma">
-    <h2>Programa</h2>
-    <!-- Agregar formulario para agregar programas -->
-    <div id="miniVentana" class="miniVentana">
-        <span class="cerrar" onclick="cerrarMiniVentana()">X</span>
-        <form id="formPrograma">
-            <label for="nombrePrograma">Nombre:</label>
-            <input type="text" id="nombrePrograma" required>
-            <label for="textPrograma">.text:</label>
-            <input type="number" id="textPrograma" min="0" step="1" required>
-            <label for="dataPrograma">.data:</label>
-            <input type="number" id="dataPrograma" min="0" step="1" required>
-            <label for="bssPrograma">.bss:</label>
-            <input type="number" id="bssPrograma" min="0" step="1" required>
-            <label for="memoriaPrograma">Memoria a usar:</label>
-            <input type="number" id="memoriaPrograma" min="0" step="1" required>
-            <button type="button" onclick="agregarPrograma()">Agregar Programa</button>
-        </form>
+        <div class="cont-conf ajuste">
+            <h2>Tipo de ajuste:</h2>
+            <p>""</p>
+            <button class="btn-ajuste">Primer Ajuste</button>
+            <button class="btn-ajuste">Peor Ajuste</button>
+            <button class="btn-ajuste">Mejor Ajuste</button>
+        </div>
+        <div class="cont-conf botones">
+            <button class="btn-boton" id="agregar-programa" onclick="VenAgrPrograma()">Agregar programa</button>
+            <button class="btn-boton" id="volver-inicio" onclick="volverInicio()">Volver al inicio</button>
+        </div>
     </div>
-    <!-- Tabla de programas existentes -->
-    <table class="tb-procesos">
-        <!-- Encabezado de la tabla -->
-        <thead class="tb-proc-enc">
-            <th>Programa</th>
-            <th>.text</th>
-            <th>.data</th>
-            <th>.bss</th>
-            <th>Memoria a usar</th>
-            <th>" "</th>
-        </thead>
-        <!-- Cuerpo de la tabla -->
-        <tbody class="tb-proc-cu" id="tablaProgramas">     
-        </tbody>
-    </table>
-</div>
-    <div class="cont-conf ajuste">
-        <h2>Tipo de ajuste:</h2>
-        <p>""</p>
-        <button class="btn-ajuste">Primer Ajuste</button>
-        <button class="btn-ajuste">Peor Ajuste</button>
-        <button class="btn-ajuste">Mejor Ajuste</button>
-    </div>
-    <div class="cont-conf botones">
-        <button class="btn-boton" id="agregar-programa" onclick="VenAgrPrograma()">Agregar programa</button>
-        <button class="btn-boton" id="volver-inicio" onclick="volverInicio()">Volver al inicio</button>
-    </div>
-</div>
     `;
     document.getElementById('caja-principal').style.display = 'grid';
     document.getElementById('caja-principal').style.gridTemplateColumns = '1fr 2fr';
@@ -224,7 +234,7 @@ function volverInicio(){
         <div class="particiones">
             <div class="part-creadas">
                 <h3>particiones <br>creadas</h3>
-                <ul>
+                <ul class="List-part">
                     <li>1400</li>
                     <li>1552</li>
                     <li>15654</li>
@@ -237,13 +247,12 @@ function volverInicio(){
         </div>
         <div class="crear-particiones">
             <input type="number" name="tamPart" id="tamPart" min="0" step="1" placeholder="tamaño de particion">
-            <button for="tamPart">Crear<br>particion</button>
+            <button for="tamPart" onclick="crearParticion()">Crear<br>particion</button>
         </div>
         <button class="crear-simu" id="crear-simu" onclick="crearsimulador()">Crear simulador</button>
         </div>
     </div>
-    </div>
-    `;
+    `
     document.getElementById('caja-principal').style.display = 'flex';
     document.getElementById('caja-principal').style.gridTemplateColumns = '';
 }
