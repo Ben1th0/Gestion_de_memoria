@@ -85,12 +85,7 @@ function agregarProcesoDesdePrograma(index) {
 
     // Actualizar la tabla de procesos
     actualizarTablaProcesos();
-    
-    //Eliminar el programa de la lista de programas si lo deseas opcional xd *_*
-    programas.splice(index, 1);
 
-    // Actualizar la tabla de programas
-    actualizarTablaProgramas();
 }
 
 // Función para terminar un proceso
@@ -140,19 +135,22 @@ function crearsimulador(){
     <div class="cont-conf programa" id="contPrograma">
     <h2>Programa</h2>
     <!-- Agregar formulario para agregar programas -->
-    <form id="formPrograma">
-        <label for="nombrePrograma">Nombre:</label>
-        <input type="text" id="nombrePrograma" required>
-        <label for="textPrograma">.text:</label>
-        <input type="number" id="textPrograma" min="0" step="1" required>
-        <label for="dataPrograma">.data:</label>
-        <input type="number" id="dataPrograma" min="0" step="1" required>
-        <label for="bssPrograma">.bss:</label>
-        <input type="number" id="bssPrograma" min="0" step="1" required>
-        <label for="memoriaPrograma">Memoria a usar:</label>
-        <input type="number" id="memoriaPrograma" min="0" step="1" required>
-        <button type="button" onclick="agregarPrograma()">Agregar Programa</button>
-    </form>
+    <div id="miniVentana" class="miniVentana">
+        <span class="cerrar" onclick="cerrarMiniVentana()">X</span>
+        <form id="formPrograma">
+            <label for="nombrePrograma">Nombre:</label>
+            <input type="text" id="nombrePrograma" required>
+            <label for="textPrograma">.text:</label>
+            <input type="number" id="textPrograma" min="0" step="1" required>
+            <label for="dataPrograma">.data:</label>
+            <input type="number" id="dataPrograma" min="0" step="1" required>
+            <label for="bssPrograma">.bss:</label>
+            <input type="number" id="bssPrograma" min="0" step="1" required>
+            <label for="memoriaPrograma">Memoria a usar:</label>
+            <input type="number" id="memoriaPrograma" min="0" step="1" required>
+            <button type="button" onclick="agregarPrograma()">Agregar Programa</button>
+        </form>
+    </div>
     <!-- Tabla de programas existentes -->
     <table class="tb-procesos">
         <!-- Encabezado de la tabla -->
@@ -177,7 +175,7 @@ function crearsimulador(){
         <button class="btn-ajuste">Mejor Ajuste</button>
     </div>
     <div class="cont-conf botones">
-        <button class="btn-boton">Agregar programa</button>
+        <button class="btn-boton" id="agregar-programa">Agregar programa</button>
         <button class="btn-boton" id="volver-inicio">Volver al inicio</button>
     </div>
 </div>
@@ -185,6 +183,7 @@ function crearsimulador(){
     document.getElementById('caja-principal').style.display = 'grid';
     document.getElementById('caja-principal').style.gridTemplateColumns = '1fr 2fr';
     document.getElementById('volver-inicio').addEventListener('click', volverInicio); 
+    document.getElementById('agregar-programa').addEventListener('click', abrirMiniVentana);
 }
 
 function volverInicio(){
