@@ -24,6 +24,7 @@ function actualizarTablaProgramas() {
         tablaProgramas.appendChild(tr);
     }
 }
+
 // Función para actualizar la tabla de procesos
 function actualizarTablaProcesos() {
     const tablaProcesos = document.getElementById('tablaProcesos');
@@ -93,14 +94,31 @@ function terminarProceso(index) {
     procesos.splice(index, 1);
     actualizarTablaProcesos();
 }
+
+//funciones para miniventana
 function abrirMiniVentana() {
-    document.getElementById('miniVentana').style.display = 'block';
-  }
+    var estatica = document.getElementById("Estatica");
+    var estaticaVar = document.getElementById("EstaticaVar");
+    if (estatica.checked){
+        document.querySelector(".particiones").style.display = 'none';
+        document.getElementById('miniVentana').style.display = 'block';
+    }else if(estaticaVar.checked){
+        document.getElementById('miniVentana').style.display = 'block';
+    }else{
+        crearsimulador();
+    }
+}
   
 function cerrarMiniVentana() {
     document.getElementById('miniVentana').style.display = 'none';
 }
 
+//ventana abrir programa
+function VenAgrPrograma(){
+    document.getElementById('miniVentana').style.display = 'block';
+}
+
+//funcion para iniciar el simulador
 function crearsimulador(){
     document.getElementById("caja-principal").innerHTML = "";
     document.getElementById("caja-principal").innerHTML = 
@@ -175,17 +193,16 @@ function crearsimulador(){
         <button class="btn-ajuste">Mejor Ajuste</button>
     </div>
     <div class="cont-conf botones">
-        <button class="btn-boton" id="agregar-programa">Agregar programa</button>
-        <button class="btn-boton" id="volver-inicio">Volver al inicio</button>
+        <button class="btn-boton" id="agregar-programa" onclick="VenAgrPrograma()">Agregar programa</button>
+        <button class="btn-boton" id="volver-inicio" onclick="volverInicio()">Volver al inicio</button>
     </div>
 </div>
-    `
+    `;
     document.getElementById('caja-principal').style.display = 'grid';
     document.getElementById('caja-principal').style.gridTemplateColumns = '1fr 2fr';
-    document.getElementById('volver-inicio').addEventListener('click', volverInicio); 
-    document.getElementById('agregar-programa').addEventListener('click', abrirMiniVentana);
 }
 
+//funcion para volver al inicio
 function volverInicio(){
     document.getElementById("caja-principal").innerHTML = "";
     document.getElementById("caja-principal").innerHTML =`
@@ -194,11 +211,11 @@ function volverInicio(){
         <h2 class='sub-titulo'>Escoja el tipo de particion de memoria</h2>
         <div class='opciones'>
             <div class='sub-opciones'><input type='radio' name='particion' id='Estatica'><label for='Estatica'>Particion Estatica</label></div>
+            <div class='sub-opciones'><input type='radio' name='particion' id='EstaticaVar'><label for='EstaticaVar'>Particion Estatica Variable</label></div>
             <div class='sub-opciones'><input type='radio' name='particion' id='Dinamica'><label for='Dinamica'>Particion Dinamica</label></div>
             <div class='sub-opciones'><input type='radio' name='particion' id='DinamicaCom'><label for='DinamicaCom'>Particion Dinamica compacta</label></div>
-            <div class='sub-opciones'><input type='radio' name='particion' id='EstaticaVar'><label for='EstaticaVar'>Particion Estatica Variable</label></div>
         </div>                
-        <button class='crear'>crear</button>
+        <button class='crear' onclick="abrirMiniVentana()">crear</button>
         <div id="miniVentana" class="miniVentana">
         <div class="contenido">
         <span class="cerrar" onclick="cerrarMiniVentana()">X</span>
@@ -222,16 +239,11 @@ function volverInicio(){
             <input type="number" name="tamPart" id="tamPart" min="0" step="1" placeholder="tamaño de particion">
             <button for="tamPart">Crear<br>particion</button>
         </div>
-        <button class="crear-simu" id="crear-simu">Crear simulador</button>
+        <button class="crear-simu" id="crear-simu" onclick="crearsimulador()">Crear simulador</button>
         </div>
     </div>
     </div>
-    
-
-    `
+    `;
     document.getElementById('caja-principal').style.display = 'flex';
     document.getElementById('caja-principal').style.gridTemplateColumns = '';
-
-    document.getElementById('crear').addEventListener('click', abrirMiniVentana);
-    document.getElementById('crear-simu').addEventListener('click', crearsimulador); 
 }
