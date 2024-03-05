@@ -101,7 +101,8 @@ function abrirMiniVentana() {
     var estaticaVar = document.getElementById("EstaticaVar");
     if (estatica.checked){
         document.querySelector(".particiones").style.display = 'none';
-        document.getElementById('miniVentana').style.display = 'block';
+        document.getElementById("miniVentana").style.display = 'block';
+        document.getElementById('btn-crearPart').remove();
     }else if(estaticaVar.checked){
         document.getElementById('miniVentana').style.display = 'block';
     }else{
@@ -120,10 +121,16 @@ function VenAgrPrograma(){
 
 //funcion para crear particiones
 function crearParticion(){
-    var parttam = document.querySelector(".tamPart");
-    var lista = document.querySelector(".List-part");
+    const parttam = parseInt(document.getElementById("tamPart").value);
+    let lista = document.getElementById("List-part");
+    let particion = document.createElement("li");
+    particion.innerText = parttam;
+    lista.appendChild(particion);
+}
 
-    lista.innerHTML = `<li>${parttam.value}</li>`;
+//funcion para tipo de ajuste
+function escojerAjuste(ajuste){
+ document.getElementById("tipo-ajuste").innerText = ajuste;
 }
 
 //funcion para iniciar el simulador
@@ -197,10 +204,10 @@ function crearsimulador(){
     </div>
         <div class="cont-conf ajuste">
             <h2>Tipo de ajuste:</h2>
-            <p>""</p>
-            <button class="btn-ajuste">Primer Ajuste</button>
-            <button class="btn-ajuste">Peor Ajuste</button>
-            <button class="btn-ajuste">Mejor Ajuste</button>
+            <p id="tipo-ajuste">""</p>
+            <button class="btn-ajuste" value="Primer Ajuste" onclick="escojerAjuste(value)">Primer Ajuste</button>
+            <button class="btn-ajuste" value="Peor Ajuste" onclick="escojerAjuste(value)">Peor Ajuste</button>
+            <button class="btn-ajuste" value="Mejor Ajuste" onclick="escojerAjuste(value)">Mejor Ajuste</button>
         </div>
         <div class="cont-conf botones">
             <button class="btn-boton" id="agregar-programa" onclick="VenAgrPrograma()">Agregar programa</button>
@@ -234,20 +241,17 @@ function volverInicio(){
         <div class="particiones">
             <div class="part-creadas">
                 <h3>particiones <br>creadas</h3>
-                <ul class="List-part">
-                    <li>1400</li>
-                    <li>1552</li>
-                    <li>15654</li>
+                <ul class="List-part" id="List-part">
                 </ul>
             </div>
             <div class="part-disponible">
                 <h3>disponible</h3>
-                <p class="part-dispo-text">1656</p>
+                <p class="part-dispo-text">16777216</p>
             </div>
         </div>
         <div class="crear-particiones">
             <input type="number" name="tamPart" id="tamPart" min="0" step="1" placeholder="tamaño de particion">
-            <button for="tamPart" onclick="crearParticion()">Crear<br>particion</button>
+            <button for="tamPart" id="btn-crearPart" onclick="crearParticion()">Crear<br>particion</button>
         </div>
         <button class="crear-simu" id="crear-simu" onclick="crearsimulador()">Crear simulador</button>
         </div>

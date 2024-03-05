@@ -27,20 +27,17 @@
                     <div class="particiones">
                         <div class="part-creadas">
                             <h3>particiones <br>creadas</h3>
-                            <ul>
-                                <li>1400</li>
-                                <li>1552</li>
-                                <li>15654</li>
+                            <ul class="List-part" id="List-part">
                             </ul>
                         </div>
                         <div class="part-disponible">
                             <h3>disponible</h3>
-                            <p class="part-dispo-text">1656</p>
+                            <p class="part-dispo-text">16777216</p>
                         </div>
                     </div>
                 <div class="crear-particiones">
                     <input type="number" name="tamPart" id="tamPart" min="0" step="1" placeholder="tamaño de particion">
-                    <button for="tamPart">Crear<br>particion</button>
+                    <button for="tamPart" id="btn-crearPart" onclick="crearParticion()">Crear<br>particion</button>
                 </div>
                 <button class="crear-simu" id="crear-simu" onclick="crearsimulador()">Crear simulador</button>
             </div>
