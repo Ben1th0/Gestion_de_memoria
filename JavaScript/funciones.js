@@ -5,7 +5,206 @@ let programas = [];
 let procesos = [];
 
 //array para las particiones
-let particiones = [];
+// let particiones = [];
+
+// Array para tipodeajuste
+let tipoAjusteSeleccionado = null;
+// Array para particiones
+let particiones = [
+  { tamaño: 500, ocupada: false, procesos: [] },
+];
+
+
+let nombre = "Simulador de memoria";
+let tamañoMemoriaTotal = 1024;
+let listaParticiones = [
+  { estado: 'libre', tamaño: tamañoMemoriaTotal, proceso: null },
+];
+
+const memoriaTotal = 1024; // Ejemplo de tamaño total de la memoria
+class Proceso {
+  constructor(nombre, tamaño) {
+      this.nombre = nombre;
+      this.tamaño = tamaño;
+  }
+}
+
+function seleccionarTipoAjuste(tipo) {
+    tipoAjusteSeleccionado = tipo;
+    document.getElementById('tipoAjusteSeleccionado').textContent = `Tipo de ajuste seleccionado: ${tipo}`;
+  
+    // Lógica adicional según el tipo de ajuste seleccionado
+    switch (tipo) {
+      case 'Primer Ajuste':
+        aplicarPrimerAjuste();
+        break;
+      case 'Peor Ajuste':
+        aplicarPeorAjuste();
+        break;
+      case 'Mejor Ajuste':
+        aplicarMejorAjuste();
+        break;
+      // Agrega más casos según sea necesario para otros tipos de ajuste
+      default:
+        // manejo de errores
+        break;
+    }
+  }
+  
+  // Ejemplo de función para aplicar el algoritmo de Primer Ajuste
+  function aplicarPrimerAjuste(Proceso) {
+    let indiceParticionLibre = -1;
+  
+    // Buscar la primera partición libre que sea lo suficientemente grande
+    for (let i = 0; i < listaParticiones.length; i++) {
+      if (listaParticiones[i].estado === "libre" && listaParticiones[i].tamaño >= tamañoProceso) {
+        indiceParticionLibre = i;
+        break;
+      }
+    }
+  
+    if (indiceParticionLibre === -1) {
+      return false; // No hay memoria disponible
+    }
+  
+    // Asignar el proceso a la partición libre
+    listaParticiones[indiceParticionLibre].estado = "ocupado";
+    listaParticiones[indiceParticionLibre].proceso = tamañoProceso;
+  
+    return true;
+  }
+  
+  // Ejemplo de función para aplicar el algoritmo de Peor Ajuste
+  function aplicarPeorAjuste(Proceso) {
+    let indiceParticionLibre = -1;
+    let mayorTamañoLibre = -1;
+  
+    // Buscar la partición libre con el mayor tamaño
+    for (let i = 0; i < listaParticiones.length; i++) {
+      if (listaParticiones[i].estado === "libre" && listaParticiones[i].tamaño >= tamañoProceso) {
+        if (listaParticiones[i].tamaño > mayorTamañoLibre) {
+          indiceParticionLibre = i;
+          mayorTamañoLibre = listaParticiones[i].tamaño;
+        }
+      }
+    }
+  
+    if (indiceParticionLibre === -1) {
+      return false; // No hay memoria disponible
+    }
+  
+    // Asignar el proceso a la partición libre
+    listaParticiones[indiceParticionLibre].estado = "ocupado";
+    listaParticiones[indiceParticionLibre].proceso = tamañoProceso;
+  
+    return true;
+  }
+
+// Función para asignar un proceso a una partición
+function asignarProceso(particion) {
+    // Marcamos la partición como ocupada
+    particion.ocupada = true;
+  
+    // Agregamos el proceso a la lista de procesos en esa partición
+    particion.procesos.push(procesoActual);
+  
+    // Calcular fragmentación si el tamaño del proceso es menor que el tamaño de la partición
+    const fragmentacion = particion.tamaño - procesoActual.tamaño;
+    if (fragmentacion > 0) {
+      particiones.push({
+        tipo: 'Fragmentación',
+        tamaño: fragmentacion,
+      });
+    }
+  
+    // Actualizamos la representación gráfica de la memoria
+    actualizarSimulacionMemoria();
+  }
+  function actualizarSimulacionMemoria() {
+    const reprMemoria = document.querySelector(".repr-memoria");
+  
+   // Calcular la memoria total utilizada
+  let memoriaTotalUtilizada = 0;
+  for (const particion of listaParticiones) {
+    if (particion.estado === "ocupado") {
+      memoriaTotalUtilizada += particion.tamaño;
+    }
+  }
+  
+    // Calcular la memoria fragmentada
+  const memoriaFragmentada = memoriaTotal - memoriaTotalUtilizada;
+
+    // Mostrar particiones, fragmentaciones y procesos
+    for (const bloque of particiones) {
+      const tipoBloque = bloque.tipo;
+const alturaBloque = (bloque.tamaño / tamañoMemoriaTotal) * alturaTotal;
+  
+      // Crear el elemento de bloque y aplicar estilos
+      const elementoBloque = document.createElement("div");
+      elementoBloque.className = tipoBloque;
+      elementoBloque.style.height = `${alturaBloque}px`;
+  
+      // Mostrar el nombre o tamaño dentro del bloque
+      if (tipoBloque === 'Proceso') {
+        elementoBloque.innerText = `Partición ${bloque.particionId + 1}\n${bloque.proceso.nombre}`;
+      } else if (tipoBloque === 'Fragmentación') {
+        elementoBloque.innerText = `Fragmentación\n${bloque.tamaño}`;
+      }
+  
+      // Agregar el bloque al contenedor de representación de memoria
+      reprMemoria.appendChild(elementoBloque);
+      
+    }
+  }
+function iniciarSimulacionMemoria() {
+    // Asegúrate de que haya al menos un proceso en la lista de procesos
+    if (procesos.length > 0) {
+        // Inicializa el proceso actual (puedes ajustar según tu lógica)
+        procesoActual = procesos[0];
+
+        // Llama a la función correspondiente según el tipo de ajuste seleccionado
+        switch (tipoAjusteSeleccionado) {
+            case 'Primer Ajuste':
+                aplicarPrimerAjuste();
+                break;
+            case 'Peor Ajuste':
+                aplicarPeorAjuste();
+                break;
+            case 'Mejor Ajuste':
+                aplicarMejorAjuste();
+                break;
+            // Agrega más casos según sea necesario para otros tipos de ajuste
+            default:
+                // manejo de errores
+                break;
+        }
+
+        // Actualiza la representación gráfica de la memoria después de asignar el proceso
+        actualizarSimulacionMemoria();
+    }
+}
+
+// Función para actualizar la tabla de programas
+function actualizarTablaProgramas() {
+    const tablaProgramas = document.getElementById('tablaProgramas');
+    tablaProgramas.innerHTML = '';
+
+    for (let i = 0; i < programas.length; i++) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="part-item">${programas[i].nombre}</td>
+            <td class="part-item">${programas[i].text}</td>
+            <td class="part-item">${programas[i].data}</td>
+            <td class="part-item">${programas[i].bss}</td>
+            <td class="part-item">${programas[i].memoria}</td>
+            <td class="part-item">
+                <button onclick="agregarProcesoDesdePrograma(${i})">Agregar a Procesos</button>
+            </td>
+        `;
+        tablaProgramas.appendChild(tr);
+    }
+}
+
 
 // Función para actualizar la tabla de programas
 function actualizarTablaProgramas() {
@@ -90,6 +289,16 @@ function agregarProcesoDesdePrograma(index) {
     // Actualizar la tabla de procesos
     actualizarTablaProcesos();
 
+    //agregar al grafico
+
+    var graficoprogram = document.querySelectorAll(".imgPrograma");
+    for(let i=0; i < graficoprogram.length; i++){
+        console.log(programa.nombre);
+        if((graficoprogram[i].innerHTML) == ''){
+            graficoprogram.innerHTML = `<p></p>`;
+            break;
+        }
+    }
 }
 
 // Función para terminar un proceso
