@@ -107,6 +107,21 @@ h1{
     display: flex;
 }
 
+.imgPrograma{
+    text-align: center;
+    border-top: solid black 1px;
+    border-right: solid black 1px;
+    border-left: solid black 1px;
+    width: 100%;
+}
+
+.img-SO{
+    text-align: center;
+    background-color: yellow;
+    border: solid black 1px;
+    width: 100%;
+    height: 6.25%;
+}
 .divi-memoria{
     border: solid black 1px;
     height: 95%;

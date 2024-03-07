@@ -4,6 +4,9 @@ let programas = [];
 // Array para almacenar los procesos
 let procesos = [];
 
+//array para las particiones
+let particiones = [];
+
 // Función para actualizar la tabla de programas
 function actualizarTablaProgramas() {
     const tablaProgramas = document.getElementById('tablaProgramas');
@@ -121,11 +124,17 @@ function VenAgrPrograma(){
 
 //funcion para crear particiones
 function crearParticion(){
-    const parttam = parseInt(document.getElementById("tamPart").value);
-    let lista = document.getElementById("List-part");
-    let particion = document.createElement("li");
-    particion.innerText = parttam;
-    lista.appendChild(particion);
+    var parttam = parseInt(document.getElementById("tamPart").value);
+    var tamdisp = parseInt(document.getElementById("part-dispo-text").textContent);
+    if(parttam < tamdisp){
+        let lista = document.getElementById("List-part");
+        let particion = document.createElement("li");
+        particion.innerText = parttam;
+        lista.appendChild(particion);
+        particiones.push(parttam);
+        var nuevoTamaño = tamdisp -parttam;
+        document.getElementById("part-dispo-text").textContent = nuevoTamaño;
+    }
 }
 
 //funcion para tipo de ajuste
@@ -133,15 +142,46 @@ function escojerAjuste(ajuste){
  document.getElementById("tipo-ajuste").innerText = ajuste;
 }
 
+function crearParticionesGraficas(){
+    var imgMemoria = document.getElementById("repr-memoria");
+    for(let i = 0 ; i <= particiones.length ; i++){
+        var tam = (particiones[i]/16777216) *100;
+        var nuevoDiv = document.createElement("div")
+        nuevoDiv.classList.add("imgPrograma");
+        nuevoDiv.id = "n" + (i);
+        nuevoDiv.innerHTML = `
+        <div class="imgPrograma" id="n${i}"></div>
+        `
+        imgMemoria.appendChild(nuevoDiv)
+        document.getElementById(`n${i}`).style.height = `${tam}%`;
+    }
+}
+
 //funcion para iniciar el simulador
 function crearsimulador(){
+    var estatica = document.getElementById("Estatica");
+    if (estatica.checked){
+        var memoria = 15728640 ;
+        var parttam = parseInt(document.getElementById("tamPart").value);
+        for (let i = memoria ; i > 0 ; i -= parttam){
+            if(i<parttam){
+                // particiones.push(i);
+            }else{
+                particiones.push(parttam);
+            }
+            console.log(i);
+        }
+        
+    }
     document.getElementById("caja-principal").innerHTML = "";
     document.getElementById("caja-principal").innerHTML = 
     `
     <div class="memoria">
     <h2>16 MG</h2>
     <div class="memoria-graf">
-        <div class="repr-memoria"></div>
+        <div class="repr-memoria" id="repr-memoria">
+            <div class="img-SO"><p>Sistema Operativo</p></div>
+        </div>
         <div class="divi-memoria"></div>
     </div>
     </div>
@@ -217,6 +257,8 @@ function crearsimulador(){
     `;
     document.getElementById('caja-principal').style.display = 'grid';
     document.getElementById('caja-principal').style.gridTemplateColumns = '1fr 2fr';
+
+    crearParticionesGraficas();
 }
 
 //funcion para volver al inicio
@@ -246,7 +288,7 @@ function volverInicio(){
             </div>
             <div class="part-disponible">
                 <h3>disponible</h3>
-                <p class="part-dispo-text">16777216</p>
+                <p class="part-dispo-text" id="part-dispo-text">15728640</p>
             </div>
         </div>
         <div class="crear-particiones">
