@@ -31,57 +31,56 @@ class memoria {
       }
       this.#particion = nuevaParticion;
     }
-  
-    crearParticiones(num) {
-      switch (this.metodo) {
-              
-        case "Particiones estáticas de tamaño fijo":
-          let tamañoParticion = Math.floor(this.tamaño / num);
-          let inicioParticion = 0;
-          for (let i = 0; i < num; i++) {
-            let particion = new Particion(tamañoParticion, inicioParticion);
-            this.particiones.push(particion);
-            inicioParticion += tamañoParticion;
-          }
-          break;
-              
-        case "Particiones estáticas de tamaño variable":
-          let inicioParticion = 0;
-          let espacioLibre = this.tamaño;
-          while (espacioLibre > 0) {
-            let tamañoProceso = Math.floor(Math.random() * espacioLibre) + 1;
-            let particion = new Particion(tamañoProceso, inicioParticion);
-            let proceso = new Proceso(
-              this.particiones.length + 1,
-              tamañoProceso,
-              Math.floor(Math.random() * 10) + 1
-            );
-              
-            particion.estado = "ocupada";
-            particion.proceso = proceso;
-            this.particiones.push(particion);
-            inicioParticion += tamañoProceso;
-            espacioLibre -= tamañoProceso;
-          }
-          break;
-              
-        case "Particiones dinámicas sin compactación":
-          let particion = new Particion(this.tamaño, 0);
-          this.particiones.push(particion);
-          break;
-              
-        case "Particiones dinámicas con compactación":
-          let particion = new Particion(this.tamaño, 0);
-          this.particiones.push(particion);
-          break;
-              
-        default:
-          console.log("El método de gestión de memoria no es válido");
-          break;         
-      }
-    }
+}
 
-    asignarProceso(proceso) {
+class Utilidades {
+    static listaAArray(lista) {
+        let array = [];
+        let nodoActual = lista.head;
+        while (nodoActual != null) {
+            array.push(nodoActual.value);
+            nodoActual = nodoActual.next;
+        }
+        return array;
+    }
+}
+  
+    switch (this.metodo) {
+
+            case "Particiones estáticas de tamaño fijo":
+            const tamañoParticion = Math.floor(this.tamaño / num);
+            for (let i = 0, inicioParticion = 0; i < num; i++, inicioParticion += tamañoParticion) {
+                let particion = new Particion(tamañoParticion, inicioParticion);
+                this.particiones.push(particion);
+            }
+            break;
+
+            case "Particiones estáticas de tamaño variable":
+            let inicioParticion = 0;
+            for (let i = 0; i < num; i++) {
+                let particion = new Particion(tamañoParticion, inicioParticion);
+                this.particiones.push(particion);
+                inicioParticion += tamañoParticion;
+            }
+            break;
+              
+            case "Particiones dinámicas sin compactación":
+            let particionDinamica = particionDinamicaSinCompactacion(this.tamaño);
+            let arrayMemoria = listaAArray(particionDinamica.listaMemoria);
+            this.particiones = arrayMemoria;
+            break;
+              
+            case "Particiones dinámicas con compactación":
+            const arrayMemoria2 = listaAArray(particionDinamica2.listaMemoria);
+            this.particiones = arrayMemoria2;
+            break;
+              
+            default:
+            console.log("El método de gestión de memoria no es válido");
+            break;         
+        }
+
+    asignarProceso(proceso);
       switch (this.metodo) {
         case "Particiones estáticas de tamaño fijo":
           for (let particion of this.particiones) {
@@ -133,9 +132,6 @@ class memoria {
                 );
                 return;
               } else {
-                let nuevaParticion = new Particion(
-                  particion.tamaño - proceso.tamaño, 
-                  particion.inicio + proceso.tamaño);
                 particion.estado = "ocupada";
                 particion.proceso = proceso;
                 particion.tamaño = proceso.tamaño;
@@ -143,5 +139,3 @@ class memoria {
             }
           }
         }
-    }
-}
