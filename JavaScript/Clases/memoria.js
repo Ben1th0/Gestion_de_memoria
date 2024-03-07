@@ -139,3 +139,75 @@ class Utilidades {
             }
           }
         }
+
+primerAjuste(proceso);
+    for (let particion of this.particiones) {
+        if (particion.estado == "libre" && particion.tamaño >= proceso.tamaño) {
+        if (particion.tamaño === proceso.tamaño) {
+            particion.estado = "ocupada";
+            particion.proceso = proceso;
+            console.log(
+             `El proceso ${proceso.id} de tamaño ${proceso.tamaño} bytes se ha asignado a la partición que empieza en ${particion.inicio} bytes`
+                );
+                } else {
+                  const newPartition = new Particion(proceso.tamaño, particion.inicio);
+                  newPartition.estado = "ocupada";
+                  newPartition.proceso = proceso;
+                  this.particiones.splice(this.particiones.indexOf(particion), 1, newPartition, particion);
+                  console.log(
+                    `El proceso ${proceso.id} de tamaño ${proceso.tamaño} bytes se ha asignado a una nueva partición que empieza en ${newPartition.inicio} bytes`
+                  );
+                }
+                return;
+              }
+            }
+            console.log(
+              `El proceso ${proceso.id} de tamaño ${proceso.tamaño} bytes no se ha podido asignar a ninguna partición`
+            );
+        
+peorAjuste(proceso);
+    let peorFitIndex = -1;
+    let peorFitSize = -1;
+        
+        for (let i = 0; i < this.particiones.length; i++) {
+        const particion = this.particiones[i];
+        if (particion.estado === "libre" && particion.tamaño >= proceso.tamaño) {
+        if (particion.tamaño > peorFitSize) {
+            peorFitSize = particion.tamaño;
+            peorFitIndex = i;
+            }
+        }
+    }
+        
+    if (peorFitIndex !== -1) {
+        const particion = this.particiones[peorFitIndex];
+        if (particion.tamaño === proceso.tamaño) {
+        particion.estado = "ocupada";
+        particion.proceso = proceso;
+        console.log(
+            `El proceso ${proceso.id} de tamaño ${proceso.tamaño} bytes se ha asignado a la partición que empieza en ${particion.inicio} bytes`
+             );
+            } else {
+                const newPartition = new Particion(proceso.tamaño, particion.inicio);
+                newPartition.estado = "ocupada";
+                newPartition.proceso = proceso;
+                this.particiones.splice(peorFitIndex, 1, newPartition, particion);
+                console.log(
+                  `El proceso ${proceso.id} de tamaño ${proceso.tamaño} bytes se ha asignado a una nueva partición que empieza en ${newPartition.inicio} bytes`
+                );
+              }
+            } else {
+              console.log(
+                `El proceso ${proceso.id} de tamaño ${proceso.tamaño} bytes no se ha podido asignar a ninguna partición`
+              );
+            }
+        
+mejorAjuste(proceso);
+    let mejorFitIndex = -1;
+    let mejorFitSize = Infinity;
+        
+    for (let i = 0; i < this.particiones.length; i++) {
+    const particion = this.particiones[i];
+        if (particion.estado === "libre" && particion.tamaño >= proceso.tamaño) {
+        }
+    }
