@@ -9,7 +9,9 @@ let procesos = [];
 
 // Array para tipodeajuste
 let tipoAjusteSeleccionado = null;
+
 // Array para particiones
+
 let particiones = [
   { tamaño: 500, ocupada: false, procesos: [] },
 ];
@@ -52,7 +54,7 @@ function seleccionarTipoAjuste(tipo) {
   }
   
   // Ejemplo de función para aplicar el algoritmo de Primer Ajuste
-  function aplicarPrimerAjuste(Proceso) {
+function aplicarPrimerAjuste(Proceso) {
     let indiceParticionLibre = -1;
   
     // Buscar la primera partición libre que sea lo suficientemente grande
@@ -72,10 +74,10 @@ function seleccionarTipoAjuste(tipo) {
     listaParticiones[indiceParticionLibre].proceso = tamañoProceso;
   
     return true;
-  }
+}
   
   // Ejemplo de función para aplicar el algoritmo de Peor Ajuste
-  function aplicarPeorAjuste(Proceso) {
+function aplicarPeorAjuste(Proceso) {
     let indiceParticionLibre = -1;
     let mayorTamañoLibre = -1;
   
@@ -98,7 +100,7 @@ function seleccionarTipoAjuste(tipo) {
     listaParticiones[indiceParticionLibre].proceso = tamañoProceso;
   
     return true;
-  }
+}
 
 // Función para asignar un proceso a una partición
 function asignarProceso(particion) {
@@ -119,43 +121,45 @@ function asignarProceso(particion) {
   
     // Actualizamos la representación gráfica de la memoria
     actualizarSimulacionMemoria();
-  }
-  function actualizarSimulacionMemoria() {
-    const reprMemoria = document.querySelector(".repr-memoria");
-  
-   // Calcular la memoria total utilizada
-  let memoriaTotalUtilizada = 0;
-  for (const particion of listaParticiones) {
-    if (particion.estado === "ocupado") {
-      memoriaTotalUtilizada += particion.tamaño;
-    }
-  }
-  
-    // Calcular la memoria fragmentada
-  const memoriaFragmentada = memoriaTotal - memoriaTotalUtilizada;
+}
 
-    // Mostrar particiones, fragmentaciones y procesos
-    for (const bloque of particiones) {
-      const tipoBloque = bloque.tipo;
-const alturaBloque = (bloque.tamaño / tamañoMemoriaTotal) * alturaTotal;
-  
-      // Crear el elemento de bloque y aplicar estilos
-      const elementoBloque = document.createElement("div");
-      elementoBloque.className = tipoBloque;
-      elementoBloque.style.height = `${alturaBloque}px`;
-  
-      // Mostrar el nombre o tamaño dentro del bloque
-      if (tipoBloque === 'Proceso') {
-        elementoBloque.innerText = `Partición ${bloque.particionId + 1}\n${bloque.proceso.nombre}`;
-      } else if (tipoBloque === 'Fragmentación') {
-        elementoBloque.innerText = `Fragmentación\n${bloque.tamaño}`;
-      }
-  
-      // Agregar el bloque al contenedor de representación de memoria
-      reprMemoria.appendChild(elementoBloque);
-      
+function actualizarSimulacionMemoria() {
+    const reprMemoria = document.querySelector(".repr-memoria");
+    
+    // Calcular la memoria total utilizada
+    let memoriaTotalUtilizada = 0;
+    for (const particion of listaParticiones) {
+        if (particion.estado === "ocupado") {
+        memoriaTotalUtilizada += particion.tamaño;
+        }
     }
-  }
+    
+        // Calcular la memoria fragmentada
+    const memoriaFragmentada = memoriaTotal - memoriaTotalUtilizada;
+
+        // Mostrar particiones, fragmentaciones y procesos
+        for (const bloque of particiones) {
+        const tipoBloque = bloque.tipo;
+    const alturaBloque = (bloque.tamaño / tamañoMemoriaTotal) * alturaTotal;
+    
+        // Crear el elemento de bloque y aplicar estilos
+        const elementoBloque = document.createElement("div");
+        elementoBloque.className = tipoBloque;
+        elementoBloque.style.height = `${alturaBloque}px`;
+    
+        // Mostrar el nombre o tamaño dentro del bloque
+        if (tipoBloque === 'Proceso') {
+            elementoBloque.innerText = `Partición ${bloque.particionId + 1}\n${bloque.proceso.nombre}`;
+        } else if (tipoBloque === 'Fragmentación') {
+            elementoBloque.innerText = `Fragmentación\n${bloque.tamaño}`;
+        }
+    
+        // Agregar el bloque al contenedor de representación de memoria
+        reprMemoria.appendChild(elementoBloque);
+        
+        }
+}
+
 function iniciarSimulacionMemoria() {
     // Asegúrate de que haya al menos un proceso en la lista de procesos
     if (procesos.length > 0) {
@@ -183,6 +187,9 @@ function iniciarSimulacionMemoria() {
         actualizarSimulacionMemoria();
     }
 }
+
+
+//desde aqui para abajo ya esta cuadrado
 
 // Función para actualizar la tabla de programas
 function actualizarTablaProgramas() {
@@ -291,14 +298,6 @@ function agregarProcesoDesdePrograma(index) {
 
     //agregar al grafico
 
-    var graficoprogram = document.querySelectorAll(".imgPrograma");
-    for(let i=0; i < graficoprogram.length; i++){
-        console.log(programa.nombre);
-        if((graficoprogram[i].innerHTML) == ''){
-            graficoprogram.innerHTML = `<p></p>`;
-            break;
-        }
-    }
 }
 
 // Función para terminar un proceso
@@ -374,7 +373,7 @@ function crearsimulador(){
         var parttam = parseInt(document.getElementById("tamPart").value);
         for (let i = memoria ; i > 0 ; i -= parttam){
             if(i<parttam){
-                // particiones.push(i);
+                particiones.push(i);
             }else{
                 particiones.push(parttam);
             }
