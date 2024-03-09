@@ -1,4 +1,3 @@
-//16777216 bytes
 class memoria {
     #tamaño; 
     #particion; 
@@ -31,116 +30,47 @@ class memoria {
       }
       this.#particion = nuevaParticion;
     }
-}
-
-class Utilidades {
-    static listaAArray(lista) {
-        let array = [];
-        let nodoActual = lista.head;
-        while (nodoActual != null) {
-            array.push(nodoActual.value);
-            nodoActual = nodoActual.next;
-        }
-        return array;
-    }
-}
+  }
   
-    switch (this.metodo) {
-
-            case "Particiones estáticas de tamaño fijo":
-            const tamañoParticion = Math.floor(this.tamaño / num);
-            for (let i = 0, inicioParticion = 0; i < num; i++, inicioParticion += tamañoParticion) {
-                let particion = new Particion(tamañoParticion, inicioParticion);
-                this.particiones.push(particion);
-            }
-            break;
-
-            case "Particiones estáticas de tamaño variable":
-            let inicioParticion = 0;
-            for (let i = 0; i < num; i++) {
-                let particion = new Particion(tamañoParticion, inicioParticion);
-                this.particiones.push(particion);
-                inicioParticion += tamañoParticion;
-            }
-            break;
-              
-            case "Particiones dinámicas sin compactación":
-            let particionDinamica = particionDinamicaSinCompactacion(this.tamaño);
-            let arrayMemoria = listaAArray(particionDinamica.listaMemoria);
-            this.particiones = arrayMemoria;
-            break;
-              
-            case "Particiones dinámicas con compactación":
-            const arrayMemoria2 = listaAArray(particionDinamica2.listaMemoria);
-            this.particiones = arrayMemoria2;
-            break;
-              
-            default:
-            console.log("El método de gestión de memoria no es válido");
-            break;         
-        }
-
-    asignarProceso(proceso);
-      switch (this.metodo) {
-        case "Particiones estáticas de tamaño fijo":
-          for (let particion of this.particiones) {
-            if (particion.estado == "libre" && particion.tamaño >= proceso.tamaño) {
-              particion.estado = "ocupada";
-              particion.proceso = proceso;
-              console.log(
-                `El proceso ${proceso.id} de tamaño ${proceso.tamaño} bytes se ha asignado a la partición que empieza en ${particion.inicio} bytes`
-              );
-              return;
-            }
-          }
-          console.log(
-            `El proceso ${proceso.id} de tamaño ${proceso.tamaño} bytes no se ha podido asignar a ninguna partición`
-          );
-          break;
-        case "Particiones estáticas de tamaño variable":
-          let mejorParticion = null;
-          let menorDiferencia = Infinity;
-          for (let particion of this.particiones) {
-            if (particion.estado == "libre" && particion.tamaño >= proceso.tamaño) {
-              let diferencia = particion.tamaño - proceso.tamaño;
-              if (diferencia < menorDiferencia) {
-                mejorParticion = particion;
-                menorDiferencia = diferencia;
-              }
-            }
-          }
-          if (mejorParticion) {
-            mejorParticion.estado = "ocupada";
-            mejorParticion.proceso = proceso;
-            console.log(
-              `El proceso ${proceso.id} de tamaño ${proceso.tamaño} bytes se ha asignado a la partición que empieza en ${mejorParticion.inicio} bytes`
-            );
-          } else {
-            console.log(
-              `El proceso ${proceso.id} de tamaño ${proceso.tamaño} bytes no se ha podido asignar a ninguna partición`
-            );
-          }
-          break;
-        case "Particiones dinámicas sin compactación":
-          for (let particion of this.particiones) {
-            if (particion.estado == "libre" && particion.tamaño >= proceso.tamaño) {
-              if (particion.tamaño == proceso.tamaño) {
-                particion.estado = "ocupada";
-                particion.proceso = proceso;
-                console.log(
-                  `El proceso ${proceso.id} de tamaño ${proceso.tamaño} bytes se ha asignado a la partición que empieza en ${particion.inicio} bytes`
-                );
-                return;
-              } else {
-                particion.estado = "ocupada";
-                particion.proceso = proceso;
-                particion.tamaño = proceso.tamaño;
-              }
-            }
-          }
-        }
-
-primerAjuste(proceso);
+  function gestionarMemoria() {
+    // Obtener el tamaño de la memoria y el número de particiones del usuario
+    const tamañoMemoria = document.getElementById("tamanioMemoria").value;
+    const numParticiones = document.getElementById("numParticiones").value;
+  
+    // Validar los valores introducidos
+    if (!validarValores(tamañoMemoria, numParticiones)) {
+      return;
+    }
+  
+    // Crear una instancia de la clase `Memoria`
+    const memoria = new Memoria(tamañoMemoria, numParticiones);
+  
+    // Generar las particiones
+    generarParticiones(memoria);
+  
+    // Mostrar la información de la memoria en la interfaz de usuario
+    mostrarMemoria(memoria);
+  
+    // Obtener el método de gestión de memoria seleccionado
+    const metodo = document.getElementById("metodo").value;
+  
+    // Seleccionar el algoritmo de asignación de memoria
+    switch (metodo) {
+      case "primerAjuste":
+        primerAjuste(memoria);
+        break;
+      case "mejorAjuste":
+        mejorAjuste(memoria);
+        break;
+      case "peorAjuste":
+        peorAjuste(memoria);
+        break;
+      default:
+        console.log("El método de gestión de memoria no es válido");
+    }
+  }
+  
+  function primerAjuste(proceso) {
     for (let particion of this.particiones) {
         if (particion.estado == "libre" && particion.tamaño >= proceso.tamaño) {
         if (particion.tamaño === proceso.tamaño) {
@@ -164,9 +94,46 @@ primerAjuste(proceso);
             console.log(
               `El proceso ${proceso.id} de tamaño ${proceso.tamaño} bytes no se ha podido asignar a ninguna partición`
             );
-        
-peorAjuste(proceso);
-    let peorFitIndex = -1;
+  }
+  
+  function mejorAjuste(proceso) {
+    let mejorFitIndex = -1;
+    let mejorFitSize = Infinity;
+  
+    // Búsqueda binaria para encontrar la partición libre con el tamaño más cercano al del proceso
+    let inicio = 0;
+    let fin = this.particiones.length - 1;
+    while (inicio <= fin) {
+      let mitad = Math.floor((inicio + fin) / 2);
+      const particion = this.particiones[mitad];
+  
+      if (particion.estado === "libre" && particion.tamaño >= proceso.tamaño) {
+        if (particion.tamaño - proceso.tamaño < mejorFitSize) {
+          mejorFitIndex = mitad;
+          mejorFitSize = particion.tamaño - proceso.tamaño;
+        }
+        fin = mitad - 1;
+      } else {
+        inicio = mitad + 1;
+      }
+    }
+  
+    // Si se encontró una partición adecuada, se asigna el proceso a la misma
+    if (mejorFitIndex !== -1) {
+      const particion = this.particiones[mejorFitIndex];
+      if (particion.tamaño === proceso.tamaño) {
+        particion.estado = "ocupada";
+        particion.proceso = proceso;
+        console.log(`El proceso ${proceso.id} de tamaño ${proceso.tamaño} bytes se ha asignado a la partición que empieza en ${particion.inicio} bytes`);
+      } else {
+        const newPartition = new Particion(proceso.tamaño, particion.inicio);
+        newPartition.estado = "ocupada";
+      }
+    }
+  }  
+
+  function peorAjuste(proceso) {
+      let peorFitIndex = -1;
     let peorFitSize = -1;
         
         for (let i = 0; i < this.particiones.length; i++) {
@@ -201,13 +168,62 @@ peorAjuste(proceso);
                 `El proceso ${proceso.id} de tamaño ${proceso.tamaño} bytes no se ha podido asignar a ninguna partición`
               );
             }
-        
-mejorAjuste(proceso);
-    let mejorFitIndex = -1;
-    let mejorFitSize = Infinity;
-        
-    for (let i = 0; i < this.particiones.length; i++) {
-    const particion = this.particiones[i];
-        if (particion.estado === "libre" && particion.tamaño >= proceso.tamaño) {
-        }
+  }
+  
+  function validarValores(tamañoMemoria, numParticiones) {
+    if (!tamañoMemoria || !numParticiones) {
+      alert("Debe introducir el tamaño de la memoria y el número de particiones");
+      return false;
     }
+  
+    if (isNaN(tamañoMemoria) || isNaN(numParticiones)) {
+      alert("El tamaño de la memoria y el número de particiones deben ser números");
+      return false;
+    }
+  
+    if (parseInt(tamañoMemoria) <= 0) {
+      alert("El tamaño de la memoria debe ser un número positivo");
+      return false;
+    }
+  
+    if (parseInt(numParticiones) <= 0) {
+      alert("El número de particiones debe ser un número positivo");
+      return false;
+    }
+  
+    return true;
+  }
+  
+
+  function generarParticiones(memoria) {
+        const metodoParticiones = document.getElementById("metodoParticiones").value;
+      
+        switch (metodoParticiones) {
+          case "estaticasTamanoFijo":
+            generarParticionesEstáticasTamañoFijo(memoria);
+            break;
+          case "estaticasTamanoVariable":
+            generarParticionesEstáticasTamañoVariable(memoria);
+            break;
+          case "dinamicasSinCompactacion":
+            generarParticionesDinámicasSinCompactacion(memoria);
+            break;
+          case "dinamicasConCompactacion":
+            generarParticionesDinámicasConCompactacion(memoria);
+            break;
+          default:
+            console.log("El método de generación de particiones no es válido");
+        }
+      }
+  function mostrarMemoria(memoria) {
+        const resultado = document.getElementById("resultado");
+      
+        // Mostrar el tamaño de la memoria
+        resultado.innerHTML += `<p>Tamaño total de la memoria: ${memoria.tamaño} bytes</p>`;
+      
+        // Mostrar las particiones
+        for (const particion of memoria.particiones) {
+          resultado.innerHTML += `<p>Partición: Inicio: ${particion.inicio} bytes, Tamaño: ${particion.tamaño} bytes, Estado: ${particion.estado}</p>`;
+        }
+      }
+      
