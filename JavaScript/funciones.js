@@ -12,21 +12,29 @@ const listaParticiones = [];
 
 //clase para procesos
 class Proceso {
-  constructor(nombre, tamaño) {
+  constructor(nombre, tamaño, identificador) {
       this.nombre = nombre;
       this.tamaño = tamaño;
+      this.identificador = identificador;
   }
 }
 
 //primer ajuste
 
-function aplicarPrimerAjuste(index) {
-    var programa = programas[index];
+function aplicarPrimerAjuste(ident) {
+    let proceso;
     let indiceParticionLibre = -1;
   
+    //buscador de proceso 
+    for (let i = 0; i < procesos.length; i++) {
+        if(procesos[i].identificador == ident){
+            proceso = procesos[i];
+        }
+    }
+
     // Buscar la primera partición libre que sea lo suficientemente grande
     for (let i = 0; i < listaParticiones.length; i++) {
-      if (listaParticiones[i].estado === 'libre' && listaParticiones[i].tamaño >= programa.memoria) {
+      if (listaParticiones[i].estado === 'libre' && listaParticiones[i].tamaño >= proceso.tamano) {
         indiceParticionLibre = i;
         break;
       }
@@ -37,21 +45,28 @@ function aplicarPrimerAjuste(index) {
     }else {
         // Asignar el proceso a la partición libre
         listaParticiones[indiceParticionLibre].estado = 'ocupado';
-        listaParticiones[indiceParticionLibre].nombre = programa.nombre;
-        listaParticiones[indiceParticionLibre].proceso = programa.identificador;
+        listaParticiones[indiceParticionLibre].nombre = proceso.nombre;
+        listaParticiones[indiceParticionLibre].proceso = proceso.identificador;
         crearParticionesGraficas();
     }
 }
   
 // Ejemplo de función para aplicar el algoritmo de Peor Ajuste
-function aplicarPeorAjuste(index) {
-    var programa = programas[index];
+function aplicarPeorAjuste(ident) {
+    var proceso;
     let indiceParticionLibre = -1;
     let mayorTamañoLibre = -1;
+
+    //buscador de proceso 
+    for (let i = 0; i < procesos.length; i++) {
+        if(procesos[i].identificador == ident){
+            proceso = procesos[i];
+        }
+    }
   
     // Buscar la partición libre con el mayor tamaño
     for (let i = 0; i < listaParticiones.length; i++) {
-      if (listaParticiones[i].estado === 'libre' && listaParticiones[i].tamaño >= programa.memoria) {
+      if (listaParticiones[i].estado === 'libre' && listaParticiones[i].tamaño >= proceso.tamano) {
         if (listaParticiones[i].tamaño > mayorTamañoLibre) {
           indiceParticionLibre = i;
           mayorTamañoLibre = listaParticiones[i].tamaño;
@@ -64,13 +79,44 @@ function aplicarPeorAjuste(index) {
     }else{
         // Asignar el proceso a la partición libre
         listaParticiones[indiceParticionLibre].estado = 'ocupado';
-        listaParticiones[indiceParticionLibre].nombre = programa.nombre;
-        listaParticiones[indiceParticionLibre].proceso = programa.identificador;
+        listaParticiones[indiceParticionLibre].nombre = proceso.nombre;
+        listaParticiones[indiceParticionLibre].proceso = proceso.identificador;
         crearParticionesGraficas();
     }
 }
 
-//desde aqui para abajo ya esta cuadrado
+function aplicarMejorAjuste(ident){
+    var proceso;
+    let indiceParticionLibre = -1;
+    let mejorajuste = 16777216;
+
+    //buscador de proceso 
+    for (let i = 0; i < procesos.length; i++) {
+        if(procesos[i].identificador == ident){
+            proceso = procesos[i];
+        }
+    }
+
+    for (let i = 0; i < listaParticiones.length; i++) {
+        if (listaParticiones[i].estado === 'libre' && listaParticiones[i].tamaño >= proceso.tamano) {
+          if ((mejorajuste - listaParticiones[i].tamaño) < mejorajuste){
+            indiceParticionLibre = i;
+            mejorajuste = mejorajuste - listaParticiones[i].tamaño;
+            break;
+          }
+        }
+    }
+
+    if (indiceParticionLibre === -1) {
+        alert("no hay espacio disponible");
+    }else{
+        // Asignar el proceso a la partición libre
+        listaParticiones[indiceParticionLibre].estado = 'ocupado';
+        listaParticiones[indiceParticionLibre].nombre = proceso.nombre;
+        listaParticiones[indiceParticionLibre].proceso = proceso.identificador;
+        crearParticionesGraficas();
+    }
+}
 
 // Función para actualizar la tabla de programas
 function actualizarTablaProgramas() {
@@ -125,7 +171,7 @@ function agregarPrograma() {
     }
 
     // Crear objeto de programa
-    var programa = { nombre: nombrePrograma, text: textPrograma, data: dataPrograma, bss: bssPrograma, memoria: memoriaPrograma, identificador: Math.random()};
+    var programa = { nombre: nombrePrograma, text: textPrograma, data: dataPrograma, bss: bssPrograma, memoria: memoriaPrograma};
 
     // Agregar programa al array
     programas.push(programa);
@@ -145,28 +191,62 @@ function agregarPrograma() {
 function agregarProcesoDesdePrograma(index) {
     var programa = programas[index];
 
-    // Agregar el programa a la lista de procesos
-    procesos.push({
-        nombre: programa.nombre,
-        tamano: programa.memoria
-    });
-
-    // Actualizar la tabla de procesos
-    actualizarTablaProcesos();
-
     //agregar al grafico
     var ajuste =  document.getElementById('tipo-ajuste').textContent;
     if (ajuste == 'Primer Ajuste'){
-        aplicarPrimerAjuste(index)
-    }else if(ajuste == 'Peor Ajuste'){
+        let ident = Math.random();
+        // Agregar el programa a la lista de procesos
+        procesos.push({
+            nombre: programa.nombre,
+            tamano: programa.memoria,
+            identificador: ident
+        });
 
+        // Actualizar la tabla de procesos
+        actualizarTablaProcesos();
+        aplicarPrimerAjuste(ident);
+    }else if(ajuste == 'Peor Ajuste'){
+        let ident = Math.random();
+        // Agregar el programa a la lista de procesos
+        procesos.push({
+            nombre: programa.nombre,
+            tamano: programa.memoria,
+            identificador: ident
+        });
+
+        // Actualizar la tabla de procesos
+        actualizarTablaProcesos();
+        aplicarPeorAjuste(ident);
+    }else if(ajuste == 'Mejor Ajuste'){
+        let ident = Math.random();
+        // Agregar el programa a la lista de procesos
+        procesos.push({
+            nombre: programa.nombre,
+            tamano: programa.memoria,
+            identificador: ident
+        });
+
+        // Actualizar la tabla de procesos
+        actualizarTablaProcesos();
+        aplicarMejorAjuste(ident);
+    }else{
+        alert('aplique un tipo de ajuste');
     }
 }
 
 // Función para terminar un proceso
 function terminarProceso(index) {
+    var proceso = procesos[index];
+    for (let i = 0; i < listaParticiones.length; i++) {
+        if(listaParticiones[i].proceso == proceso.identificador){
+            listaParticiones[i].estado = 'libre';
+            listaParticiones[i].nombre = '';
+            listaParticiones[i].proceso = '';
+        }
+    }
     procesos.splice(index, 1);
     actualizarTablaProcesos();
+    crearParticionesGraficas();
 }
 
 //funciones para miniventana
