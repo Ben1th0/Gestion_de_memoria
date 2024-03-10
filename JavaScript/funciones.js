@@ -4,26 +4,13 @@ let programas = [];
 // Array para almacenar los procesos
 let procesos = [];
 
-//array para las particiones
-// let particiones = [];
-
 // Array para tipodeajuste
 let tipoAjusteSeleccionado = null;
 
 // Array para particiones
+const listaParticiones = [];
 
-let particiones = [
-  { tamaño: 500, ocupada: false, procesos: [] },
-];
-
-
-let nombre = "Simulador de memoria";
-let tamañoMemoriaTotal = 1024;
-let listaParticiones = [
-  { estado: 'libre', tamaño: tamañoMemoriaTotal, proceso: null },
-];
-
-const memoriaTotal = 1024; // Ejemplo de tamaño total de la memoria
+//clase para procesos
 class Proceso {
   constructor(nombre, tamaño) {
       this.nombre = nombre;
@@ -31,59 +18,40 @@ class Proceso {
   }
 }
 
-function seleccionarTipoAjuste(tipo) {
-    tipoAjusteSeleccionado = tipo;
-    document.getElementById('tipoAjusteSeleccionado').textContent = `Tipo de ajuste seleccionado: ${tipo}`;
-  
-    // Lógica adicional según el tipo de ajuste seleccionado
-    switch (tipo) {
-      case 'Primer Ajuste':
-        aplicarPrimerAjuste();
-        break;
-      case 'Peor Ajuste':
-        aplicarPeorAjuste();
-        break;
-      case 'Mejor Ajuste':
-        aplicarMejorAjuste();
-        break;
-      // Agrega más casos según sea necesario para otros tipos de ajuste
-      default:
-        // manejo de errores
-        break;
-    }
-  }
-  
-  // Ejemplo de función para aplicar el algoritmo de Primer Ajuste
-function aplicarPrimerAjuste(Proceso) {
+//primer ajuste
+
+function aplicarPrimerAjuste(index) {
+    var programa = programas[index];
     let indiceParticionLibre = -1;
   
     // Buscar la primera partición libre que sea lo suficientemente grande
     for (let i = 0; i < listaParticiones.length; i++) {
-      if (listaParticiones[i].estado === "libre" && listaParticiones[i].tamaño >= tamañoProceso) {
+      if (listaParticiones[i].estado === 'libre' && listaParticiones[i].tamaño >= programa.memoria) {
         indiceParticionLibre = i;
         break;
       }
     }
   
     if (indiceParticionLibre === -1) {
-      return false; // No hay memoria disponible
+      alert("no hay espacio disponible");
+    }else {
+        // Asignar el proceso a la partición libre
+        listaParticiones[indiceParticionLibre].estado = 'ocupado';
+        listaParticiones[indiceParticionLibre].nombre = programa.nombre;
+        listaParticiones[indiceParticionLibre].proceso = programa.identificador;
+        crearParticionesGraficas();
     }
-  
-    // Asignar el proceso a la partición libre
-    listaParticiones[indiceParticionLibre].estado = "ocupado";
-    listaParticiones[indiceParticionLibre].proceso = tamañoProceso;
-  
-    return true;
 }
   
-  // Ejemplo de función para aplicar el algoritmo de Peor Ajuste
-function aplicarPeorAjuste(Proceso) {
+// Ejemplo de función para aplicar el algoritmo de Peor Ajuste
+function aplicarPeorAjuste(index) {
+    var programa = programas[index];
     let indiceParticionLibre = -1;
     let mayorTamañoLibre = -1;
   
     // Buscar la partición libre con el mayor tamaño
     for (let i = 0; i < listaParticiones.length; i++) {
-      if (listaParticiones[i].estado === "libre" && listaParticiones[i].tamaño >= tamañoProceso) {
+      if (listaParticiones[i].estado === 'libre' && listaParticiones[i].tamaño >= programa.memoria) {
         if (listaParticiones[i].tamaño > mayorTamañoLibre) {
           indiceParticionLibre = i;
           mayorTamañoLibre = listaParticiones[i].tamaño;
@@ -92,112 +60,25 @@ function aplicarPeorAjuste(Proceso) {
     }
   
     if (indiceParticionLibre === -1) {
-      return false; // No hay memoria disponible
-    }
-  
-    // Asignar el proceso a la partición libre
-    listaParticiones[indiceParticionLibre].estado = "ocupado";
-    listaParticiones[indiceParticionLibre].proceso = tamañoProceso;
-  
-    return true;
-}
-
-// Función para asignar un proceso a una partición
-function asignarProceso(particion) {
-    // Marcamos la partición como ocupada
-    particion.ocupada = true;
-  
-    // Agregamos el proceso a la lista de procesos en esa partición
-    particion.procesos.push(procesoActual);
-  
-    // Calcular fragmentación si el tamaño del proceso es menor que el tamaño de la partición
-    const fragmentacion = particion.tamaño - procesoActual.tamaño;
-    if (fragmentacion > 0) {
-      particiones.push({
-        tipo: 'Fragmentación',
-        tamaño: fragmentacion,
-      });
-    }
-  
-    // Actualizamos la representación gráfica de la memoria
-    actualizarSimulacionMemoria();
-}
-
-function actualizarSimulacionMemoria() {
-    const reprMemoria = document.querySelector(".repr-memoria");
-    
-    // Calcular la memoria total utilizada
-    let memoriaTotalUtilizada = 0;
-    for (const particion of listaParticiones) {
-        if (particion.estado === "ocupado") {
-        memoriaTotalUtilizada += particion.tamaño;
-        }
-    }
-    
-        // Calcular la memoria fragmentada
-    const memoriaFragmentada = memoriaTotal - memoriaTotalUtilizada;
-
-        // Mostrar particiones, fragmentaciones y procesos
-        for (const bloque of particiones) {
-        const tipoBloque = bloque.tipo;
-    const alturaBloque = (bloque.tamaño / tamañoMemoriaTotal) * alturaTotal;
-    
-        // Crear el elemento de bloque y aplicar estilos
-        const elementoBloque = document.createElement("div");
-        elementoBloque.className = tipoBloque;
-        elementoBloque.style.height = `${alturaBloque}px`;
-    
-        // Mostrar el nombre o tamaño dentro del bloque
-        if (tipoBloque === 'Proceso') {
-            elementoBloque.innerText = `Partición ${bloque.particionId + 1}\n${bloque.proceso.nombre}`;
-        } else if (tipoBloque === 'Fragmentación') {
-            elementoBloque.innerText = `Fragmentación\n${bloque.tamaño}`;
-        }
-    
-        // Agregar el bloque al contenedor de representación de memoria
-        reprMemoria.appendChild(elementoBloque);
-        
-        }
-}
-
-function iniciarSimulacionMemoria() {
-    // Asegúrate de que haya al menos un proceso en la lista de procesos
-    if (procesos.length > 0) {
-        // Inicializa el proceso actual (puedes ajustar según tu lógica)
-        procesoActual = procesos[0];
-
-        // Llama a la función correspondiente según el tipo de ajuste seleccionado
-        switch (tipoAjusteSeleccionado) {
-            case 'Primer Ajuste':
-                aplicarPrimerAjuste();
-                break;
-            case 'Peor Ajuste':
-                aplicarPeorAjuste();
-                break;
-            case 'Mejor Ajuste':
-                aplicarMejorAjuste();
-                break;
-            // Agrega más casos según sea necesario para otros tipos de ajuste
-            default:
-                // manejo de errores
-                break;
-        }
-
-        // Actualiza la representación gráfica de la memoria después de asignar el proceso
-        actualizarSimulacionMemoria();
+        alert("no hay espacio disponible");
+    }else{
+        // Asignar el proceso a la partición libre
+        listaParticiones[indiceParticionLibre].estado = 'ocupado';
+        listaParticiones[indiceParticionLibre].nombre = programa.nombre;
+        listaParticiones[indiceParticionLibre].proceso = programa.identificador;
+        crearParticionesGraficas();
     }
 }
-
 
 //desde aqui para abajo ya esta cuadrado
 
 // Función para actualizar la tabla de programas
 function actualizarTablaProgramas() {
-    const tablaProgramas = document.getElementById('tablaProgramas');
+    var tablaProgramas = document.getElementById('tablaProgramas');
     tablaProgramas.innerHTML = '';
 
     for (let i = 0; i < programas.length; i++) {
-        const tr = document.createElement('tr');
+        var tr = document.createElement('tr');
         tr.innerHTML = `
             <td class="part-item">${programas[i].nombre}</td>
             <td class="part-item">${programas[i].text}</td>
@@ -205,29 +86,7 @@ function actualizarTablaProgramas() {
             <td class="part-item">${programas[i].bss}</td>
             <td class="part-item">${programas[i].memoria}</td>
             <td class="part-item">
-                <button onclick="agregarProcesoDesdePrograma(${i})">Agregar a Procesos</button>
-            </td>
-        `;
-        tablaProgramas.appendChild(tr);
-    }
-}
-
-
-// Función para actualizar la tabla de programas
-function actualizarTablaProgramas() {
-    const tablaProgramas = document.getElementById('tablaProgramas');
-    tablaProgramas.innerHTML = '';
-
-    for (let i = 0; i < programas.length; i++) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td class="part-item">${programas[i].nombre}</td>
-            <td class="part-item">${programas[i].text}</td>
-            <td class="part-item">${programas[i].data}</td>
-            <td class="part-item">${programas[i].bss}</td>
-            <td class="part-item">${programas[i].memoria}</td>
-            <td class="part-item">
-                <button onclick="agregarProcesoDesdePrograma(${i})">Agregar a Procesos</button>
+                <button onclick="agregarProcesoDesdePrograma(${i})">iniciar Proceso</button>
             </td>
         `;
         tablaProgramas.appendChild(tr);
@@ -236,11 +95,11 @@ function actualizarTablaProgramas() {
 
 // Función para actualizar la tabla de procesos
 function actualizarTablaProcesos() {
-    const tablaProcesos = document.getElementById('tablaProcesos');
+    var tablaProcesos = document.getElementById('tablaProcesos');
     tablaProcesos.innerHTML = '';
 
     for (let i = 0; i < procesos.length; i++) {
-        const tr = document.createElement('tr');
+        var tr = document.createElement('tr');
         tr.innerHTML = `
             <td class="part-item">${procesos[i].nombre}</td>
             <td class="part-item">${procesos[i].tamano}</td>
@@ -254,20 +113,19 @@ function actualizarTablaProcesos() {
 
 // Función para agregar un programa
 function agregarPrograma() {
-    const nombrePrograma = document.getElementById('nombrePrograma').value;
-    const textPrograma = parseInt(document.getElementById('textPrograma').value);
-    const dataPrograma = parseInt(document.getElementById('dataPrograma').value);
-    const bssPrograma = parseInt(document.getElementById('bssPrograma').value);
-    const memoriaPrograma = parseInt(document.getElementById('memoriaPrograma').value);
+    var nombrePrograma = document.getElementById('nombrePrograma').value;
+    var textPrograma = parseInt(document.getElementById('textPrograma').value);
+    var dataPrograma = parseInt(document.getElementById('dataPrograma').value);
+    var bssPrograma = parseInt(document.getElementById('bssPrograma').value);
+    var memoriaPrograma = parseInt(document.getElementById('memoriaPrograma').value);
 
     // Validar que los campos no estén vacíos
     if (!nombrePrograma || isNaN(textPrograma) || isNaN(dataPrograma) || isNaN(bssPrograma) || isNaN(memoriaPrograma) || textPrograma < 0 || dataPrograma < 0 || bssPrograma < 0 || memoriaPrograma < 0) {
         alert('Ingresa valores válidos para el programa.');
-        return;
     }
 
     // Crear objeto de programa
-    const programa = { nombre: nombrePrograma, text: textPrograma, data: dataPrograma, bss: bssPrograma, memoria: memoriaPrograma };
+    var programa = { nombre: nombrePrograma, text: textPrograma, data: dataPrograma, bss: bssPrograma, memoria: memoriaPrograma, identificador: Math.random()};
 
     // Agregar programa al array
     programas.push(programa);
@@ -285,7 +143,7 @@ function agregarPrograma() {
 
 // Función para agregar un proceso desde un programa
 function agregarProcesoDesdePrograma(index) {
-    const programa = programas[index];
+    var programa = programas[index];
 
     // Agregar el programa a la lista de procesos
     procesos.push({
@@ -297,7 +155,12 @@ function agregarProcesoDesdePrograma(index) {
     actualizarTablaProcesos();
 
     //agregar al grafico
+    var ajuste =  document.getElementById('tipo-ajuste').textContent;
+    if (ajuste == 'Primer Ajuste'){
+        aplicarPrimerAjuste(index)
+    }else if(ajuste == 'Peor Ajuste'){
 
+    }
 }
 
 // Función para terminar un proceso
@@ -313,19 +176,23 @@ function abrirMiniVentana() {
     if (estatica.checked){
         document.querySelector(".particiones").style.display = 'none';
         document.getElementById("miniVentana").style.display = 'block';
-        document.getElementById('btn-crearPart').remove();
+        document.getElementById('btn-crearPart').style.display = 'none';
     }else if(estaticaVar.checked){
         document.getElementById('miniVentana').style.display = 'block';
+        document.querySelector(".particiones").style.display = 'block';
+        document.getElementById('btn-crearPart').style.display = 'inline';
     }else{
         crearsimulador();
     }
 }
+
+//funciones para ventanas emergentes
   
 function cerrarMiniVentana() {
     document.getElementById('miniVentana').style.display = 'none';
 }
 
-//ventana abrir programa
+
 function VenAgrPrograma(){
     document.getElementById('miniVentana').style.display = 'block';
 }
@@ -339,7 +206,8 @@ function crearParticion(){
         let particion = document.createElement("li");
         particion.innerText = parttam;
         lista.appendChild(particion);
-        particiones.push(parttam);
+        var parti = {estado: 'libre', tamaño: parttam, proceso: '', nombre: ''}
+        listaParticiones.push(parti);
         var nuevoTamaño = tamdisp -parttam;
         document.getElementById("part-dispo-text").textContent = nuevoTamaño;
     }
@@ -348,24 +216,26 @@ function crearParticion(){
 //funcion para tipo de ajuste
 function escojerAjuste(ajuste){
  document.getElementById("tipo-ajuste").innerText = ajuste;
+ tipoAjusteSeleccionado = ajuste;
 }
 
+
+//recuadrar esta funcion con la creacicon de las particiones
 function crearParticionesGraficas(){
     var imgMemoria = document.getElementById("repr-memoria");
-    for(let i = 0 ; i <= particiones.length ; i++){
-        var tam = (particiones[i]/16777216) *100;
+    imgMemoria.innerHTML =``;
+    for(let i = 0 ; i < listaParticiones.length ; i++){
+        var tam = (((listaParticiones[i].tamaño)/16777216) *100);
         var nuevoDiv = document.createElement("div")
         nuevoDiv.classList.add("imgPrograma");
-        nuevoDiv.id = "n" + (i);
-        nuevoDiv.innerHTML = `
-        <div class="imgPrograma" id="n${i}"></div>
-        `
-        imgMemoria.appendChild(nuevoDiv)
+        nuevoDiv.id = `n${i}`;
+        nuevoDiv.innerHTML = `<p>${listaParticiones[i].nombre}</p>`
+        imgMemoria.appendChild(nuevoDiv);
         document.getElementById(`n${i}`).style.height = `${tam}%`;
     }
 }
 
-//funcion para iniciar el simulador
+//funcion para iniciar el simulador //recuadrar esta funcion con la creacicon de las particiones estaticas
 function crearsimulador(){
     var estatica = document.getElementById("Estatica");
     if (estatica.checked){
@@ -373,9 +243,11 @@ function crearsimulador(){
         var parttam = parseInt(document.getElementById("tamPart").value);
         for (let i = memoria ; i > 0 ; i -= parttam){
             if(i<parttam){
-                particiones.push(i);
+                var parti = {estado: 'libre', tamaño: i, proceso: '', nombre: ''}
+                listaParticiones.push(parti);
             }else{
-                particiones.push(parttam);
+                var parti = {estado: 'libre', tamaño: parttam, proceso: '', nombre: ''}
+                listaParticiones.push(parti);
             }
             console.log(i);
         }
