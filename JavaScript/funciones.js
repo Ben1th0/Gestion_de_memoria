@@ -29,7 +29,7 @@ let procesos = [];
 let tipoAjusteSeleccionado = null;
 
 // Array para particiones
-const listaParticiones = [];
+let listaParticiones = [];
 
 //clase para procesos
 class Proceso {
@@ -432,6 +432,8 @@ function crearParticionDinamica(nombre, tamano) {
 
 //funcion para iniciar el simulador, recuadrar esta funcion con la creacicon de las particiones estaticas
 function crearsimulador(){
+    programas = [];
+    listaParticiones = [];
     var estatica = document.getElementById("Estatica");
     if (estatica.checked){
         var memoria = 15728640 ;
