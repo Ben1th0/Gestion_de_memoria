@@ -44,12 +44,14 @@ class Proceso {
 
 function aplicarPrimerAjuste(ident) {
     let proceso;
+    let indiceDeProcesos = -1;
     let indiceParticionLibre = -1;
   
     //buscador de proceso 
     for (let i = 0; i < procesos.length; i++) {
         if(procesos[i].identificador == ident){
             proceso = procesos[i];
+            indiceDeProcesos = i;
         }
     }
 
@@ -62,8 +64,11 @@ function aplicarPrimerAjuste(ident) {
     }
   
     if (indiceParticionLibre === -1) {
-      alert("no hay espacio disponible");
-    }else {
+        alert("no hay espacio disponible");
+        procesos.splice(indiceDeProcesos, 1);
+    }else{
+        //actualiza la tabla de procesos
+        actualizarTablaProcesos() 
         // Asignar el proceso a la partición libre
         listaParticiones[indiceParticionLibre].estado = 'ocupado';
         listaParticiones[indiceParticionLibre].nombre = proceso.nombre;
@@ -75,6 +80,7 @@ function aplicarPrimerAjuste(ident) {
 // Ejemplo de función para aplicar el algoritmo de Peor Ajuste
 function aplicarPeorAjuste(ident) {
     var proceso;
+    let indiceDeProcesos = -1;
     let indiceParticionLibre = -1;
     let mayorTamañoLibre = -1;
 
@@ -82,6 +88,7 @@ function aplicarPeorAjuste(ident) {
     for (let i = 0; i < procesos.length; i++) {
         if(procesos[i].identificador == ident){
             proceso = procesos[i];
+            indiceDeProcesos = i;
         }
     }
   
@@ -97,7 +104,10 @@ function aplicarPeorAjuste(ident) {
   
     if (indiceParticionLibre === -1) {
         alert("no hay espacio disponible");
+        procesos.splice(indiceDeProcesos, 1);
     }else{
+        //actualiza la tabla de procesos
+        actualizarTablaProcesos() 
         // Asignar el proceso a la partición libre
         listaParticiones[indiceParticionLibre].estado = 'ocupado';
         listaParticiones[indiceParticionLibre].nombre = proceso.nombre;
@@ -108,6 +118,7 @@ function aplicarPeorAjuste(ident) {
 
 function aplicarMejorAjuste(ident){
     var proceso;
+    let indiceDeProcesos = -1;
     let indiceParticionLibre = -1;
     let mejorajuste = 16777216;
 
@@ -115,6 +126,7 @@ function aplicarMejorAjuste(ident){
     for (let i = 0; i < procesos.length; i++) {
         if(procesos[i].identificador == ident){
             proceso = procesos[i];
+            indiceDeProcesos = i;
         }
     }
 
@@ -130,7 +142,10 @@ function aplicarMejorAjuste(ident){
 
     if (indiceParticionLibre === -1) {
         alert("no hay espacio disponible");
+        procesos.splice(indiceDeProcesos, 1);
     }else{
+        //actualiza la tabla de procesos
+        actualizarTablaProcesos() 
         // Asignar el proceso a la partición libre
         listaParticiones[indiceParticionLibre].estado = 'ocupado';
         listaParticiones[indiceParticionLibre].nombre = proceso.nombre;
@@ -163,26 +178,18 @@ function actualizarTablaProgramas() {
 // Función para actualizar la tabla de procesos
 function actualizarTablaProcesos() {
     var tablaProcesos = document.getElementById('tablaProcesos');
+    tablaProcesos.innerHTML = ``;
 
-    // Verificar si la tablaProcesos existe antes de intentar manipularla
-    if (tablaProcesos) {
-        console.log('Tabla de procesos encontrada:', tablaProcesos);
-
-        tablaProcesos.innerHTML = '';
-
-        for (let i = 0; i < procesos.length; i++) {
-            var tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td class="part-item">${procesos[i].nombre}</td>
-                <td class="part-item">${procesos[i].tamano}</td>
-                <td class="part-item">
-                    <button onclick="terminarProceso(${i})">Terminar</button>
-                </td>
-            `;
-            tablaProcesos.appendChild(tr);
-        }
-    } else {
-        console.error("La tablaProcesos no se encontró en el DOM");
+    for (let i = 0; i < procesos.length; i++) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="part-item">${procesos[i].nombre}</td>
+            <td class="part-item">${procesos[i].tamano}</td>
+            <td class="part-item">
+                <button onclick="terminarProceso(${i})">Terminar</button>
+            </td>
+        `;
+        tablaProcesos.appendChild(tr);
     }
 }
 
@@ -230,9 +237,6 @@ function agregarProcesoDesdePrograma(index) {
             tamano: programa.memoria,
             identificador: ident
         });
-
-        // Actualizar la tabla de procesos
-        actualizarTablaProcesos();
         aplicarPrimerAjuste(ident);
     }else if(ajuste == 'Peor Ajuste'){
         let ident = Math.random();
@@ -242,9 +246,6 @@ function agregarProcesoDesdePrograma(index) {
             tamano: programa.memoria,
             identificador: ident
         });
-
-        // Actualizar la tabla de procesos
-        actualizarTablaProcesos();
         aplicarPeorAjuste(ident);
     }else if(ajuste == 'Mejor Ajuste'){
         let ident = Math.random();
@@ -254,9 +255,6 @@ function agregarProcesoDesdePrograma(index) {
             tamano: programa.memoria,
             identificador: ident
         });
-
-        // Actualizar la tabla de procesos
-        actualizarTablaProcesos();
         aplicarMejorAjuste(ident);
     }else{
         alert('aplique un tipo de ajuste');
@@ -536,7 +534,6 @@ function crearsimulador(){
     document.getElementById('caja-principal').style.gridTemplateColumns = '1fr 2fr';
 
     crearParticionesGraficas();
-    // Llamada a la función al iniciar la simulación
     generarProgramasAutomaticos();
 }
 
