@@ -1,3 +1,42 @@
+// Función para generar programas automáticamente
+function generarProgramasAutomaticos() {
+    // Crear 5 programas automáticamente
+    for (let i = 0; i < 5; i++) {
+        let nombrePrograma = `Programa${i + 1}`;
+        let textPrograma = Math.floor(Math.random() * 100) + 1; // Ejemplo de tamaño aleatorio
+        let dataPrograma = Math.floor(Math.random() * 100) + 1;
+        let bssPrograma = Math.floor(Math.random() * 100) + 1;
+        let memoriaPrograma = textPrograma + dataPrograma + bssPrograma;
+
+        // Crear objeto de programa
+        let programa = { nombre: nombrePrograma, text: textPrograma, data: dataPrograma, bss: bssPrograma, memoria: memoriaPrograma };
+
+        // Agregar programa al array
+        programas.push(programa);
+
+        // Agregar programa a la lista de procesos
+        let ident = Math.random();
+        procesos.push({
+            nombre: nombrePrograma,
+            tamano: memoriaPrograma,
+            identificador: ident
+        });
+
+        if (tipoAjusteSeleccionado === 'Primer Ajuste') {
+            aplicarPrimerAjuste(ident);
+        } else if (tipoAjusteSeleccionado === 'Peor Ajuste') {
+            aplicarPeorAjuste(ident);
+        } else if (tipoAjusteSeleccionado === 'Mejor Ajuste') {
+            aplicarMejorAjuste(ident);
+        }
+    }
+
+    // Actualizar la tabla de procesos
+    actualizarTablaProcesos();
+    // Crear particiones gráficas al iniciar
+    crearParticionesGraficas();
+}
+
 // Array para almacenar los programas
 let programas = [];
 
@@ -9,6 +48,9 @@ let tipoAjusteSeleccionado = null;
 
 // Array para particiones
 const listaParticiones = [];
+
+// Llamada a la función al iniciar la simulación
+generarProgramasAutomaticos();
 
 //clase para procesos
 class Proceso {
@@ -142,18 +184,26 @@ function actualizarTablaProgramas() {
 // Función para actualizar la tabla de procesos
 function actualizarTablaProcesos() {
     var tablaProcesos = document.getElementById('tablaProcesos');
-    tablaProcesos.innerHTML = '';
 
-    for (let i = 0; i < procesos.length; i++) {
-        var tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td class="part-item">${procesos[i].nombre}</td>
-            <td class="part-item">${procesos[i].tamano}</td>
-            <td class="part-item">
-                <button onclick="terminarProceso(${i})">Terminar</button>
-            </td>
-        `;
-        tablaProcesos.appendChild(tr);
+    // Verificar si la tablaProcesos existe antes de intentar manipularla
+    if (tablaProcesos) {
+        console.log('Tabla de procesos encontrada:', tablaProcesos);
+
+        tablaProcesos.innerHTML = '';
+
+        for (let i = 0; i < procesos.length; i++) {
+            var tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="part-item">${procesos[i].nombre}</td>
+                <td class="part-item">${procesos[i].tamano}</td>
+                <td class="part-item">
+                    <button onclick="terminarProceso(${i})">Terminar</button>
+                </td>
+            `;
+            tablaProcesos.appendChild(tr);
+        }
+    } else {
+        console.error("La tablaProcesos no se encontró en el DOM");
     }
 }
 
@@ -301,17 +351,27 @@ function escojerAjuste(ajuste){
 
 
 //recuadrar esta funcion con la creacicon de las particiones
-function crearParticionesGraficas(){
+function crearParticionesGraficas() {
     var imgMemoria = document.getElementById("repr-memoria");
-    imgMemoria.innerHTML =``;
-    for(let i = 0 ; i < listaParticiones.length ; i++){
-        var tam = (((listaParticiones[i].tamaño)/16777216) *100);
-        var nuevoDiv = document.createElement("div")
-        nuevoDiv.classList.add("imgPrograma");
-        nuevoDiv.id = `n${i}`;
-        nuevoDiv.innerHTML = `<p>${listaParticiones[i].nombre}</p>`
-        imgMemoria.appendChild(nuevoDiv);
-        document.getElementById(`n${i}`).style.height = `${tam}%`;
+
+    if (imgMemoria) {
+        imgMemoria.innerHTML = '';
+
+        if (listaParticiones && listaParticiones.length > 0) {
+            for (let i = 0; i < listaParticiones.length; i++) {
+                var tam = (listaParticiones[i].tamaño / 16777216) * 100;
+                var nuevoDiv = document.createElement("div");
+                nuevoDiv.classList.add("imgPrograma");
+                nuevoDiv.id = `n${i}`;
+                nuevoDiv.innerHTML = `<p>${listaParticiones[i].nombre}</p>`;
+                imgMemoria.appendChild(nuevoDiv);
+                document.getElementById(`n${i}`).style.height = `${tam}%`;
+            }
+        } else {
+            console.error("La lista de particiones está vacía o no está definida.");
+        }
+    } else {
+        console.error("El elemento repr-memoria no se encontró en el DOM");
     }
 }
 
@@ -461,4 +521,5 @@ function volverInicio(){
     `
     document.getElementById('caja-principal').style.display = 'flex';
     document.getElementById('caja-principal').style.gridTemplateColumns = '';
-}
+     }
+
