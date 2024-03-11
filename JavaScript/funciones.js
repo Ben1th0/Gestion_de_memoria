@@ -598,6 +598,5 @@ function volverInicio(){
     `
     document.getElementById('caja-principal').style.display = 'flex';
     document.getElementById('caja-principal').style.gridTemplateColumns = '';
-<<<<<<< HEAD
      }
 
