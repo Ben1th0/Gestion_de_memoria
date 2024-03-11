@@ -14,27 +14,9 @@ function generarProgramasAutomaticos() {
         // Agregar programa al array
         programas.push(programa);
 
-        // Agregar programa a la lista de procesos
-        let ident = Math.random();
-        procesos.push({
-            nombre: nombrePrograma,
-            tamano: memoriaPrograma,
-            identificador: ident
-        });
-
-        if (tipoAjusteSeleccionado === 'Primer Ajuste') {
-            aplicarPrimerAjuste(ident);
-        } else if (tipoAjusteSeleccionado === 'Peor Ajuste') {
-            aplicarPeorAjuste(ident);
-        } else if (tipoAjusteSeleccionado === 'Mejor Ajuste') {
-            aplicarMejorAjuste(ident);
-        }
-    }
-
     // Actualizar la tabla de procesos
-    actualizarTablaProcesos();
-    // Crear particiones gráficas al iniciar
-    crearParticionesGraficas();
+    actualizarTablaProgramas();
+    }
 }
 
 // Array para almacenar los programas
@@ -48,9 +30,6 @@ let tipoAjusteSeleccionado = null;
 
 // Array para particiones
 const listaParticiones = [];
-
-// Llamada a la función al iniciar la simulación
-generarProgramasAutomaticos();
 
 //clase para procesos
 class Proceso {
@@ -248,7 +227,7 @@ function agregarProcesoDesdePrograma(index) {
         // Agregar el programa a la lista de procesos
         procesos.push({
             nombre: programa.nombre,
-            tamaño: programa.memoria,
+            tamano: programa.memoria,
             identificador: ident
         });
 
@@ -260,7 +239,7 @@ function agregarProcesoDesdePrograma(index) {
         // Agregar el programa a la lista de procesos
         procesos.push({
             nombre: programa.nombre,
-            tamaño: programa.memoria,
+            tamano: programa.memoria,
             identificador: ident
         });
 
@@ -272,7 +251,7 @@ function agregarProcesoDesdePrograma(index) {
         // Agregar el programa a la lista de procesos
         procesos.push({
             nombre: programa.nombre,
-            tamaño: programa.memoria,
+            tamano: programa.memoria,
             identificador: ident
         });
 
@@ -374,6 +353,7 @@ function crearParticionesGraficas() {
         console.error("El elemento repr-memoria no se encontró en el DOM");
     }
 }
+
 //Funciona para agregar particiones dinamicas
 function crearParticionDinamica(nombre, tamano) {
     // Validar que el tamaño sea positivo
@@ -556,6 +536,8 @@ function crearsimulador(){
     document.getElementById('caja-principal').style.gridTemplateColumns = '1fr 2fr';
 
     crearParticionesGraficas();
+    // Llamada a la función al iniciar la simulación
+    generarProgramasAutomaticos();
 }
 
 //funcion para volver al inicio
