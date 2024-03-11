@@ -405,7 +405,7 @@ function crearParticionDinamica(nombre, tamano) {
   }
 
   //Compactar particiones dinamicas
-  function compactarParticionesDinamicas() {
+function compactarParticionesDinamicas() {
     // Lista para almacenar las particiones libres después de la compactación
     let listaParticionesLibres = [];
   
@@ -427,7 +427,7 @@ function crearParticionDinamica(nombre, tamano) {
     // Actualizar la lista de particiones y la representación gráfica
     listaParticiones = listaParticionesLibres;
     crearParticionesGraficas();
-  }
+}
   
 
 //funcion para iniciar el simulador, recuadrar esta funcion con la creacicon de las particiones estaticas
