@@ -107,20 +107,107 @@ h1{
     display: flex;
 }
 
-.imgPrograma{
+/* Modifica el estilo del recuadro de programas */
+.imgPrograma {
     text-align: center;
-    border-top: solid black 1px;
-    border-right: solid black 1px;
-    border-left: solid black 1px;
+    border: 1px solid black;
     width: 100%;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.img-SO{
+.imgPrograma:hover {
+    background-color: #ecf0f1;
+}
+
+/* Añade estilos adicionales para resaltar la primera fila (encabezado) */
+.imgPrograma:first-child {
+    background-color: #3498db;
+    color: #ffffff;
+}
+
+/* Añade estilos para las celdas dentro del recuadro de programas */
+.imgPrograma p {
+    margin: 0;
+    font-weight: bold;
+}
+
+/* Modifica el estilo de la celda de Sistema Operativo */
+.img-SO {
     text-align: center;
     background-color: yellow;
-    border: solid black 1px;
+    border: 1px solid black;
     width: 100%;
     height: 6.25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* Añade estilos para el encabezado de la memoria */
+.repr-memoria {
+    border: 1px solid black;
+    height: 95%;
+    width: 200px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Añade estilos adicionales para resaltar el encabezado de la memoria */
+.repr-memoria p {
+    margin: 0;
+    font-weight: bold;
+}
+
+.divi-memoria {
+    border: 1px solid black;
+    height: 95%;
+    width: 100px;
+}
+
+/* Añade estilos para las tablas de procesos y programas */
+.tb-procesos,
+.tb-proc-enc,
+.tb-proc-cu {
+    border: 1px solid black;
+}
+
+.tb-proc-enc th,
+.tb-proc-cu td {
+    padding: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.tb-proc-enc {
+    background-color: #3498db;
+    color: #ffffff;
+}
+
+/* Añade estilos para los botones de ajuste y otros botones */
+.btn-ajuste,
+.btn-boton {
+    display: block;
+    width: 80%;
+    margin: 5%;
+    padding: 8px;
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+}
+
+.btn-ajuste:hover,
+.btn-boton:hover {
+    background-color: #2980b9;
 }
 .divi-memoria{
     border: solid black 1px;
