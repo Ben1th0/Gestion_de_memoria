@@ -601,6 +601,3 @@ function volverInicio(){
 <<<<<<< HEAD
      }
 
-=======
-}
->>>>>>> dd5010a3489cd1cec3b635cb7e63949a309c969d
