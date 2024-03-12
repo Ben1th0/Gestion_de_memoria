@@ -259,20 +259,12 @@ function aplicarMejorAjuste(ident){
         crearParticionesGraficas();
         actualizarTablaProcesos();
     }else{
-        //buscador de proceso 
-        for (let i = 0; i < procesos.length; i++) {
-            if(procesos[i].identificador == ident){
-                proceso = procesos[i];
-                indiceDeProcesos = i;
-            }
-        }
 
         for (let i = 0; i < listaParticiones.length; i++) {
             if (listaParticiones[i].estado === 'libre' && listaParticiones[i].tamaño >= proceso.tamano) {
-            if ((mejorajuste - listaParticiones[i].tamaño) < mejorajuste){
+            if ((mejorajuste - listaParticiones[i].tamaño) < mejorajuste && (mejorajuste - listaParticiones[i].tamaño) > 0){
                 indiceParticionLibre = i;
-                mejorajuste = mejorajuste - listaParticiones[i].tamaño;
-                break;
+                mejorajuste = listaParticiones[i].tamaño;
             }
             }
         }
