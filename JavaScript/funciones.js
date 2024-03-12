@@ -99,13 +99,6 @@ function aplicarPrimerAjuste(ident) {
         crearParticionesGraficas();
         actualizarTablaProcesos();
     }else{
-    //buscador de proceso 
-        for (let i = 0; i < procesos.length; i++) {
-            if(procesos[i].identificador == ident){
-                proceso = procesos[i];
-                indiceDeProcesos = i;
-            }
-        }
 
         // Buscar la primera partición libre que sea lo suficientemente grande
         for (let i = 0; i < listaParticiones.length; i++) {
@@ -474,6 +467,8 @@ function VenAgrPrograma(){
 
 //funcion para crear particiones
 function crearParticion(){
+    var SO = {estado: 'ocupado', tamaño: 1048576, proceso: 'SO', nombre: 'Sistema Operativo'}
+    listaParticiones[0] = SO;
     var parttam = parseInt(document.getElementById("tamPart").value);
     var tamdisp = parseInt(document.getElementById("part-dispo-text").textContent);
     if(parttam < tamdisp){
@@ -485,6 +480,15 @@ function crearParticion(){
         listaParticiones.push(parti);
         var nuevoTamaño = tamdisp -parttam;
         document.getElementById("part-dispo-text").textContent = nuevoTamaño;   
+    }else{
+        let lista = document.getElementById("List-part");
+        let particion = document.createElement("li");
+        particion.innerText = tamdisp;
+        lista.appendChild(particion);
+        var parti = {estado: 'libre', tamaño: tamdisp, proceso: '', nombre: '', porcentaje:  0}
+        listaParticiones.push(parti);
+        var nuevoTamaño = 0;
+        document.getElementById("part-dispo-text").textContent = nuevoTamaño; 
     }
 }
 
@@ -632,6 +636,8 @@ function liberarMemoria(nombreParticion) {
   
 //funcion para iniciar el simulador, recuadrar esta funcion con la creacicon de las particiones estaticas
 function crearsimulador(){
+    tipoMemorita = 0;
+    procesos = []
     var estatica = document.getElementById("Estatica");
     var dinamica = document.getElementById("Dinamica");
     var dinamicaCom = document.getElementById("DinamicaCom");
@@ -655,11 +661,13 @@ function crearsimulador(){
     }else if(dinamica.checked){
         tipoMemorita = 1;
         listaParticiones = [];
+        procesos = []
         var SO = {estado: 'ocupado', tamaño: 1048576, proceso: 'SO', nombre: 'Sistema Operativo'}
         listaParticiones.push(SO);
     }else if(dinamicaCom.checked){
         tipoMemorita = 2;
         listaParticiones = [];
+        procesos = []
         var SO = {estado: 'ocupado', tamaño: 1048576, proceso: 'SO', nombre: 'Sistema Operativo'}
         listaParticiones.push(SO);
     }
