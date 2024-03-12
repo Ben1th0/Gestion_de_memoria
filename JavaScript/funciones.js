@@ -521,6 +521,115 @@ function crearParticionesGraficas() {
     }
 }
 
+//Funciona para agregar particiones dinamicas
+function crearParticionDinamica(nombre) {
+    
+    if (tamaño <= 0) {
+      alert("El tamaño de la partición debe ser positivo.");
+      return;
+    }
+  
+    // Buscar un espacio libre contiguo lo suficientemente grande
+    let espacioLibreEncontrado = false;
+    let indiceParticionInicio = -1;
+    let espacioLibreTotal = 0;
+    for (let i = 0; i < listaParticiones.length; i++) {
+      if (listaParticiones[i].estado === "libre") {
+        if (espacioLibreTotal === 0) {
+          indiceParticionInicio = i;
+        }
+        espacioLibreTotal += listaParticiones[i].tamaño;
+        if (espacioLibreTotal >= tamano) {
+          espacioLibreEncontrado = true;
+          break;
+        }
+      } else {
+        espacioLibreTotal = 0;
+        indiceParticionInicio = -1;
+      }
+    }
+  
+    // Si se encontró un espacio libre, crear la partición
+    if (espacioLibreEncontrado) {
+      let espacioRestante = espacioLibreTotal - tamano;
+      for (let i = indiceParticionInicio; i < listaParticiones.length; i++) {
+        if (listaParticiones[i].estado === "libre") {
+          if (espacioRestante > 0) {
+            listaParticiones[i].tamaño = listaParticiones[i].tamaño - espacioRestante;
+            listaParticiones[i].estado = "ocupado";
+            listaParticiones[i].nombre = nombre;
+            listaParticiones[i].proceso = "";
+            break;
+          } else {
+            listaParticiones[i].estado = "ocupado";
+            listaParticiones[i].nombre = nombre;
+            listaParticiones[i].proceso = "";
+          }
+        }
+      }
+      crearParticionesGraficas();
+    } else {
+      alert("No hay espacio disponible para la partición.");
+    }
+  }
+  
+
+  //Compactar particiones dinamicas
+function compactarParticionesDinamicas() {
+    // Lista para almacenar las particiones libres después de la compactación
+    let listaParticionesLibres = [];
+  
+    // Recorrer la lista de particiones
+    for (let i = 0; i < listaParticiones.length; i++) {
+      // Si la partición está libre, agregarla a la lista de particiones libres
+      if (listaParticiones[i].estado === "libre") {
+        listaParticionesLibres.push(listaParticiones[i]);
+      } else {
+        // Si la partición está ocupada, moverla al inicio de la lista de particiones
+        if (i > 0) {
+          let aux = listaParticiones[i];
+          listaParticiones[i] = listaParticiones[0];
+          listaParticiones[0] = aux;
+        }
+      }
+    }
+  
+    // Actualizar la lista de particiones y la representación gráfica
+    listaParticiones = listaParticionesLibres;
+    crearParticionesGraficas();
+}
+
+function verificarMemoriaDisponible(nombreParticion) {
+    // Buscar la partición con el nombre indicado
+    let particion = listaParticiones.find(particion => particion.nombre === nombreParticion);
+  
+    if (particion) {
+      // Obtener la memoria libre de la partición
+      let memoriaLibre = particion.memoriaDisponible;
+  
+      // Mostrar la memoria libre
+      alert("Memoria libre en la partición " + nombreParticion + ": " + memoriaLibre + " bytes");
+    } else {
+      alert("No se encontró la partición " + nombreParticion);
+    }
+}
+
+function liberarMemoria(nombreParticion) {
+    // Buscar la partición con el nombre indicado
+    let particion = listaParticiones.find(particion => particion.nombre === nombreParticion);
+
+    if (particion) {
+        // Liberar la partición
+        particion.estado = "libre";
+        particion.proceso = "";
+        particion.nombre = "";
+        particion.memoriaDisponible = particion.tamaño;
+        crearParticionesGraficas();
+    } else {
+        alert("No se encontró la partición " + nombreParticion);
+    }
+}
+  
 //funcion para iniciar el simulador, recuadrar esta funcion con la creacicon de las particiones estaticas
 function crearsimulador(){
     var estatica = document.getElementById("Estatica");
@@ -687,4 +796,3 @@ function volverInicio(){
     document.getElementById('caja-principal').style.display = 'flex';
     document.getElementById('caja-principal').style.gridTemplateColumns = '';
      }
-
