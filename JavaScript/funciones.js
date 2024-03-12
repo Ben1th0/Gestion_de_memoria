@@ -362,8 +362,8 @@ function crearParticionesGraficas() {
 }
 
 //Funciona para agregar particiones dinamicas
-function crearParticionDinamica(nombre, tamano) {
-    // Validar que el tamaño sea positivo
+function crearParticionDinamica(nombre) {
+    
     if (tamaño <= 0) {
       alert("El tamaño de la partición debe ser positivo.");
       return;
@@ -412,6 +412,7 @@ function crearParticionDinamica(nombre, tamano) {
       alert("No hay espacio disponible para la partición.");
     }
   }
+  
 
   //Compactar particiones dinamicas
 function compactarParticionesDinamicas() {
@@ -437,8 +438,38 @@ function compactarParticionesDinamicas() {
     listaParticiones = listaParticionesLibres;
     crearParticionesGraficas();
 }
-  
 
+function verificarMemoriaDisponible(nombreParticion) {
+    // Buscar la partición con el nombre indicado
+    let particion = listaParticiones.find(particion => particion.nombre === nombreParticion);
+  
+    if (particion) {
+      // Obtener la memoria libre de la partición
+      let memoriaLibre = particion.memoriaDisponible;
+  
+      // Mostrar la memoria libre
+      alert("Memoria libre en la partición " + nombreParticion + ": " + memoriaLibre + " bytes");
+    } else {
+      alert("No se encontró la partición " + nombreParticion);
+    }
+}
+
+function liberarMemoria(nombreParticion) {
+    // Buscar la partición con el nombre indicado
+    let particion = listaParticiones.find(particion => particion.nombre === nombreParticion);
+
+    if (particion) {
+        // Liberar la partición
+        particion.estado = "libre";
+        particion.proceso = "";
+        particion.nombre = "";
+        particion.memoriaDisponible = particion.tamaño;
+        crearParticionesGraficas();
+    } else {
+        alert("No se encontró la partición " + nombreParticion);
+    }
+}
+  
 //funcion para iniciar el simulador, recuadrar esta funcion con la creacicon de las particiones estaticas
 function crearsimulador(){
     var estatica = document.getElementById("Estatica");
@@ -593,4 +624,3 @@ function volverInicio(){
     document.getElementById('caja-principal').style.display = 'flex';
     document.getElementById('caja-principal').style.gridTemplateColumns = '';
      }
-
