@@ -3,7 +3,6 @@ const pila = 65536;
 //monticulo
 const monticulo = 131072;
 
-
 // Función para generar programas automáticamente
 function generarProgramasAutomaticos() {
     // Crear 5 programas automáticamente
@@ -36,6 +35,8 @@ let tipoAjusteSeleccionado = null;
 // Array para particiones
 let listaParticiones = [];
 
+let tipoMemorita;
+
 //clase para procesos
 class Proceso {
   constructor(nombre, tamaño, identificador) {
@@ -51,36 +52,83 @@ function aplicarPrimerAjuste(ident) {
     let proceso;
     let indiceDeProcesos = -1;
     let indiceParticionLibre = -1;
-  
-    //buscador de proceso 
     for (let i = 0; i < procesos.length; i++) {
         if(procesos[i].identificador == ident){
             proceso = procesos[i];
-            indiceDeProcesos = i;
         }
     }
-
-    // Buscar la primera partición libre que sea lo suficientemente grande
-    for (let i = 0; i < listaParticiones.length; i++) {
-      if (listaParticiones[i].estado === 'libre' && listaParticiones[i].tamaño >= proceso.tamano) {
-        indiceParticionLibre = i;
-        break;
-      }
-    }
-  
-    if (indiceParticionLibre === -1) {
-        alert("no hay espacio disponible");
-        procesos.splice(indiceDeProcesos, 1);
-    }else{
-        //actualiza la tabla de procesos
-        actualizarTablaProcesos() 
-        // Asignar el proceso a la partición libre
-        listaParticiones[indiceParticionLibre].estado = 'ocupado';
-        listaParticiones[indiceParticionLibre].nombre = proceso.nombre;
-        listaParticiones[indiceParticionLibre].proceso = proceso.identificador; 
-        listaParticiones[indiceParticionLibre].porcentaje = ((proceso.tamano / listaParticiones[indiceParticionLibre].tamaño)*100)
-        console.log(listaParticiones[indiceParticionLibre].porcentaje)
+    if(tipoMemorita == 1){
+        
+            for(let j = 0; j < listaParticiones.length; j++){
+                if((listaParticiones[j].estado == 'libre') && (listaParticiones[j].tamaño > proceso.tamano)){
+                    listaParticiones.splice(j,0,{
+                        estado: 'ocupado', 
+                        tamaño: proceso.tamano, 
+                        proceso: proceso.identificador, 
+                        nombre: proceso.nombre, 
+                        porcentaje: proceso.tamano
+                    })
+                    listaParticiones[j+1].tamaño = (listaParticiones[j+ 1].tamaño - listaParticiones[j].tamaño);
+                    actualizarTablaProcesos();
+                    crearParticionesGraficas();
+                    console.log(listaParticiones[i]);
+                    break;
+                }else if(([listaParticiones.length - 1] == j)){
+                    listaParticiones.push({
+                        estado: 'ocupado', 
+                        tamaño: proceso.tamano, 
+                        proceso: proceso.identificador, 
+                        nombre: proceso.nombre, 
+                        porcentaje:  proceso.tamano
+                    });
+                    crearParticionesGraficas();
+                    actualizarTablaProcesos();
+                    break;
+                }
+                console.log(listaParticiones[j]);
+            }
+        
+    }else if(tipoMemorita == 2){
+        listaParticiones.push({
+            estado: 'ocupado', 
+            tamaño: proceso.tamano, 
+            proceso: proceso.identificador, 
+            nombre: proceso.nombre, 
+            porcentaje:  proceso.tamano
+        });
         crearParticionesGraficas();
+        actualizarTablaProcesos();
+    }else{
+    //buscador de proceso 
+        for (let i = 0; i < procesos.length; i++) {
+            if(procesos[i].identificador == ident){
+                proceso = procesos[i];
+                indiceDeProcesos = i;
+            }
+        }
+
+        // Buscar la primera partición libre que sea lo suficientemente grande
+        for (let i = 0; i < listaParticiones.length; i++) {
+        if (listaParticiones[i].estado === 'libre' && listaParticiones[i].tamaño >= proceso.tamano) {
+            indiceParticionLibre = i;
+            break;
+        }
+        }
+    
+        if (indiceParticionLibre === -1) {
+            alert("no hay espacio disponible");
+            procesos.splice(indiceDeProcesos, 1);
+        }else{
+            //actualiza la tabla de procesos
+            actualizarTablaProcesos() 
+            // Asignar el proceso a la partición libre
+            listaParticiones[indiceParticionLibre].estado = 'ocupado';
+            listaParticiones[indiceParticionLibre].nombre = proceso.nombre;
+            listaParticiones[indiceParticionLibre].proceso = proceso.identificador; 
+            listaParticiones[indiceParticionLibre].porcentaje = ((proceso.tamano / listaParticiones[indiceParticionLibre].tamaño)*100)
+            console.log(listaParticiones[indiceParticionLibre].porcentaje)
+            crearParticionesGraficas();
+        }
     }
 }
   
@@ -90,36 +138,81 @@ function aplicarPeorAjuste(ident) {
     let indiceDeProcesos = -1;
     let indiceParticionLibre = -1;
     let mayorTamañoLibre = -1;
-
-    //buscador de proceso 
     for (let i = 0; i < procesos.length; i++) {
         if(procesos[i].identificador == ident){
             proceso = procesos[i];
-            indiceDeProcesos = i;
         }
     }
-  
-    // Buscar la partición libre con el mayor tamaño
-    for (let i = 0; i < listaParticiones.length; i++) {
-      if (listaParticiones[i].estado === 'libre' && listaParticiones[i].tamaño >= proceso.tamano) {
-        if (listaParticiones[i].tamaño > mayorTamañoLibre) {
-          indiceParticionLibre = i;
-          mayorTamañoLibre = listaParticiones[i].tamaño;
+    if(tipoMemorita == 1){
+        for(let j = 0; j < listaParticiones.length; j++){
+            if((listaParticiones[j].estado == 'libre') && (listaParticiones[j].tamaño > proceso.tamano)){
+                listaParticiones.splice(j,0,{
+                    estado: 'ocupado', 
+                    tamaño: proceso.tamano, 
+                    proceso: proceso.identificador, 
+                    nombre: proceso.nombre, 
+                    porcentaje: proceso.tamano
+                })
+                listaParticiones[j+1].tamaño = (listaParticiones[j+ 1].tamaño - listaParticiones[j].tamaño);
+                actualizarTablaProcesos();
+                crearParticionesGraficas();
+                console.log(listaParticiones[i]);
+                break;
+            }else if(([listaParticiones.length - 1] == j)){
+                listaParticiones.push({
+                    estado: 'ocupado', 
+                    tamaño: proceso.tamano, 
+                    proceso: proceso.identificador, 
+                    nombre: proceso.nombre, 
+                    porcentaje:  proceso.tamano
+                });
+                crearParticionesGraficas();
+                actualizarTablaProcesos();
+                break;
+            }
+            console.log(listaParticiones[j]);
         }
-      }
-    }
-  
-    if (indiceParticionLibre === -1) {
-        alert("no hay espacio disponible");
-        procesos.splice(indiceDeProcesos, 1);
-    }else{
-        //actualiza la tabla de procesos
-        actualizarTablaProcesos() 
-        // Asignar el proceso a la partición libre
-        listaParticiones[indiceParticionLibre].estado = 'ocupado';
-        listaParticiones[indiceParticionLibre].nombre = proceso.nombre;
-        listaParticiones[indiceParticionLibre].proceso = proceso.identificador;
+    }else if(tipoMemorita == 2){
+        listaParticiones.push({
+            estado: 'ocupado', 
+            tamaño: proceso.tamano, 
+            proceso: proceso.identificador, 
+            nombre: proceso.nombre, 
+            porcentaje:  proceso.tamano
+        });
         crearParticionesGraficas();
+        actualizarTablaProcesos();
+    }else{
+        //buscador de proceso 
+        for (let i = 0; i < procesos.length; i++) {
+            if(procesos[i].identificador == ident){
+                proceso = procesos[i];
+                indiceDeProcesos = i;
+            }
+        }
+    
+        // Buscar la partición libre con el mayor tamaño
+        for (let i = 0; i < listaParticiones.length; i++) {
+        if (listaParticiones[i].estado === 'libre' && listaParticiones[i].tamaño >= proceso.tamano) {
+            if (listaParticiones[i].tamaño > mayorTamañoLibre) {
+            indiceParticionLibre = i;
+            mayorTamañoLibre = listaParticiones[i].tamaño;
+            }
+        }
+        }
+    
+        if (indiceParticionLibre === -1) {
+            alert("no hay espacio disponible");
+            procesos.splice(indiceDeProcesos, 1);
+        }else{
+            //actualiza la tabla de procesos
+            actualizarTablaProcesos() 
+            // Asignar el proceso a la partición libre
+            listaParticiones[indiceParticionLibre].estado = 'ocupado';
+            listaParticiones[indiceParticionLibre].nombre = proceso.nombre;
+            listaParticiones[indiceParticionLibre].proceso = proceso.identificador;
+            crearParticionesGraficas();
+        }
     }
 }
 
@@ -128,36 +221,98 @@ function aplicarMejorAjuste(ident){
     let indiceDeProcesos = -1;
     let indiceParticionLibre = -1;
     let mejorajuste = 16777216;
-
-    //buscador de proceso 
     for (let i = 0; i < procesos.length; i++) {
         if(procesos[i].identificador == ident){
             proceso = procesos[i];
-            indiceDeProcesos = i;
         }
     }
-
-    for (let i = 0; i < listaParticiones.length; i++) {
-        if (listaParticiones[i].estado === 'libre' && listaParticiones[i].tamaño >= proceso.tamano) {
-          if ((mejorajuste - listaParticiones[i].tamaño) < mejorajuste){
-            indiceParticionLibre = i;
-            mejorajuste = mejorajuste - listaParticiones[i].tamaño;
-            break;
-          }
+    if(tipoMemorita == 1){
+        for(let j = 0; j < listaParticiones.length; j++){
+            if((listaParticiones[j].estado == 'libre') && (listaParticiones[j].tamaño > proceso.tamano)){
+                listaParticiones.splice(j,0,{
+                    estado: 'ocupado', 
+                    tamaño: proceso.tamano, 
+                    proceso: proceso.identificador, 
+                    nombre: proceso.nombre, 
+                    porcentaje: proceso.tamano
+                })
+                listaParticiones[j+1].tamaño = (listaParticiones[j+ 1].tamaño - listaParticiones[j].tamaño);
+                actualizarTablaProcesos();
+                crearParticionesGraficas();
+                console.log(listaParticiones[i]);
+                break;
+            }else if(([listaParticiones.length - 1] == j)){
+                listaParticiones.push({
+                    estado: 'ocupado', 
+                    tamaño: proceso.tamano, 
+                    proceso: proceso.identificador, 
+                    nombre: proceso.nombre, 
+                    porcentaje:  proceso.tamano
+                });
+                crearParticionesGraficas();
+                actualizarTablaProcesos();
+                break;
+            }
+            console.log(listaParticiones[j]);
         }
-    }
-
-    if (indiceParticionLibre === -1) {
-        alert("no hay espacio disponible");
-        procesos.splice(indiceDeProcesos, 1);
-    }else{
-        //actualiza la tabla de procesos
-        actualizarTablaProcesos() 
-        // Asignar el proceso a la partición libre
-        listaParticiones[indiceParticionLibre].estado = 'ocupado';
-        listaParticiones[indiceParticionLibre].nombre = proceso.nombre;
-        listaParticiones[indiceParticionLibre].proceso = proceso.identificador;
+    }else if(tipoMemorita == 2){
+        listaParticiones.push({
+            estado: 'ocupado', 
+            tamaño: proceso.tamano, 
+            proceso: proceso.identificador, 
+            nombre: proceso.nombre, 
+            porcentaje:  proceso.tamano
+        });
         crearParticionesGraficas();
+        actualizarTablaProcesos();
+    }else{
+        //buscador de proceso 
+        for (let i = 0; i < procesos.length; i++) {
+            if(procesos[i].identificador == ident){
+                proceso = procesos[i];
+                indiceDeProcesos = i;
+            }
+        }
+
+        for (let i = 0; i < listaParticiones.length; i++) {
+            if (listaParticiones[i].estado === 'libre' && listaParticiones[i].tamaño >= proceso.tamano) {
+            if ((mejorajuste - listaParticiones[i].tamaño) < mejorajuste){
+                indiceParticionLibre = i;
+                mejorajuste = mejorajuste - listaParticiones[i].tamaño;
+                break;
+            }
+            }
+        }
+
+        if (indiceParticionLibre === -1) {
+            alert("no hay espacio disponible");
+            procesos.splice(indiceDeProcesos, 1);
+        }else{
+            //actualiza la tabla de procesos
+            actualizarTablaProcesos() 
+            // Asignar el proceso a la partición libre
+            listaParticiones[indiceParticionLibre].estado = 'ocupado';
+            listaParticiones[indiceParticionLibre].nombre = proceso.nombre;
+            listaParticiones[indiceParticionLibre].proceso = proceso.identificador;
+            crearParticionesGraficas();
+        }
+    }
+}
+
+function unificarParticionesLibres(){
+    for(let i = 1; i < listaParticiones.length; i++){
+        if(listaParticiones[i-1].estado == 'libre' && listaParticiones[i].estado == 'libre'){
+            listaParticiones[i-1].tamaño = listaParticiones[i-1].tamaño + listaParticiones[i].tamaño;
+            listaParticiones.splice(i, 1);
+        }
+    }
+}
+
+function borrarParticionesLibres(){
+    for(let i = 0; i < listaParticiones.length; i++){
+        if(listaParticiones[i].estado == 'libre'){
+            listaParticiones.splice(i,1);
+        }
     }
 }
 
@@ -280,6 +435,11 @@ function terminarProceso(index) {
         }
     }
     procesos.splice(index, 1);
+    if(tipoMemorita == 1){
+        unificarParticionesLibres();
+    }if(tipoMemorita == 2){
+        borrarParticionesLibres();
+    }
     actualizarTablaProcesos();
     crearParticionesGraficas();
 }
@@ -361,92 +521,16 @@ function crearParticionesGraficas() {
     }
 }
 
-//Funciona para agregar particiones dinamicas
-function crearParticionDinamica(nombre, tamano) {
-    // Validar que el tamaño sea positivo
-    if (tamaño <= 0) {
-      alert("El tamaño de la partición debe ser positivo.");
-      return;
-    }
-  
-    // Buscar un espacio libre contiguo lo suficientemente grande
-    let espacioLibreEncontrado = false;
-    let indiceParticionInicio = -1;
-    let espacioLibreTotal = 0;
-    for (let i = 0; i < listaParticiones.length; i++) {
-      if (listaParticiones[i].estado === "libre") {
-        if (espacioLibreTotal === 0) {
-          indiceParticionInicio = i;
-        }
-        espacioLibreTotal += listaParticiones[i].tamaño;
-        if (espacioLibreTotal >= tamano) {
-          espacioLibreEncontrado = true;
-          break;
-        }
-      } else {
-        espacioLibreTotal = 0;
-        indiceParticionInicio = -1;
-      }
-    }
-  
-    // Si se encontró un espacio libre, crear la partición
-    if (espacioLibreEncontrado) {
-      let espacioRestante = espacioLibreTotal - tamano;
-      for (let i = indiceParticionInicio; i < listaParticiones.length; i++) {
-        if (listaParticiones[i].estado === "libre") {
-          if (espacioRestante > 0) {
-            listaParticiones[i].tamaño = listaParticiones[i].tamaño - espacioRestante;
-            listaParticiones[i].estado = "ocupado";
-            listaParticiones[i].nombre = nombre;
-            listaParticiones[i].proceso = "";
-            break;
-          } else {
-            listaParticiones[i].estado = "ocupado";
-            listaParticiones[i].nombre = nombre;
-            listaParticiones[i].proceso = "";
-          }
-        }
-      }
-      crearParticionesGraficas();
-    } else {
-      alert("No hay espacio disponible para la partición.");
-    }
-  }
-
-  //Compactar particiones dinamicas
-function compactarParticionesDinamicas() {
-    // Lista para almacenar las particiones libres después de la compactación
-    let listaParticionesLibres = [];
-  
-    // Recorrer la lista de particiones
-    for (let i = 0; i < listaParticiones.length; i++) {
-      // Si la partición está libre, agregarla a la lista de particiones libres
-      if (listaParticiones[i].estado === "libre") {
-        listaParticionesLibres.push(listaParticiones[i]);
-      } else {
-        // Si la partición está ocupada, moverla al inicio de la lista de particiones
-        if (i > 0) {
-          let aux = listaParticiones[i];
-          listaParticiones[i] = listaParticiones[0];
-          listaParticiones[0] = aux;
-        }
-      }
-    }
-  
-    // Actualizar la lista de particiones y la representación gráfica
-    listaParticiones = listaParticionesLibres;
-    crearParticionesGraficas();
-}
-  
-
 //funcion para iniciar el simulador, recuadrar esta funcion con la creacicon de las particiones estaticas
 function crearsimulador(){
     var estatica = document.getElementById("Estatica");
+    var dinamica = document.getElementById("Dinamica");
+    var dinamicaCom = document.getElementById("DinamicaCom");
     if (estatica.checked){
         programas = [];
-        listaParticiones = [];
+        listaParticiones = []; 
         var SO = {estado: 'ocupado', tamaño: 1048576, proceso: 'SO', nombre: 'Sistema Operativo'}
-        listaParticiones.push(SO);  
+        listaParticiones.push(SO);
         var memoria = 15728640 ;
         var parttam = parseInt(document.getElementById("tamPart").value);
         for (let i = memoria ; i > 0 ; i -= parttam){
@@ -459,8 +543,18 @@ function crearsimulador(){
             }
             console.log(i);
         }
-        
+    }else if(dinamica.checked){
+        tipoMemorita = 1;
+        listaParticiones = [];
+        var SO = {estado: 'ocupado', tamaño: 1048576, proceso: 'SO', nombre: 'Sistema Operativo'}
+        listaParticiones.push(SO);
+    }else if(dinamicaCom.checked){
+        tipoMemorita = 2;
+        listaParticiones = [];
+        var SO = {estado: 'ocupado', tamaño: 1048576, proceso: 'SO', nombre: 'Sistema Operativo'}
+        listaParticiones.push(SO);
     }
+
     document.getElementById("caja-principal").innerHTML = "";
     document.getElementById("caja-principal").innerHTML = 
     `
