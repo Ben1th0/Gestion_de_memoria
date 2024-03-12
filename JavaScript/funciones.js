@@ -1,22 +1,27 @@
+//pila 
+const pila = 65536;
+//monticulo
+const monticulo = 131072;
+
+
 // Función para generar programas automáticamente
 function generarProgramasAutomaticos() {
     // Crear 5 programas automáticamente
-    for (let i = 0; i < 5; i++) {
-        let nombrePrograma = `Programa${i + 1}`;
-        let textPrograma = Math.floor(Math.random() * 100) + 1; // Ejemplo de tamaño aleatorio
-        let dataPrograma = Math.floor(Math.random() * 100) + 1;
-        let bssPrograma = Math.floor(Math.random() * 100) + 1;
-        let memoriaPrograma = textPrograma + dataPrograma + bssPrograma;
-
-        // Crear objeto de programa
-        let programa = { nombre: nombrePrograma, text: textPrograma, data: dataPrograma, bss: bssPrograma, memoria: memoriaPrograma };
+        let programa1 = { nombre: "Notepad", text: 19524, data: 12352, bss: 1165, memoria: 19524+12352+1165+pila+monticulo };
+        let programa2 = { nombre: 'Word', text: 77539, data: 32680, bss: 4100, memoria: 77539+32680+4100+pila+monticulo  };
+        let programa3 = { nombre: 'Excel', text: 99542, data: 24245, bss: 7557, memoria: 99542+24245+7557+pila+monticulo  };
+        let programa4 = { nombre: 'AutoCAD', text: 115000, data: 123470, bss: 1123, memoria: 115000+123470+1123+pila+monticulo  };
+        let programa5 = { nombre: 'Calculadora', text: 12342, data: 1256, bss: 1756, memoria: 12342+1256+1756+pila+monticulo  };
 
         // Agregar programa al array
-        programas.push(programa);
+        programas.push(programa1);
+        programas.push(programa2);
+        programas.push(programa3);
+        programas.push(programa4);
+        programas.push(programa5);
 
     // Actualizar la tabla de procesos
     actualizarTablaProgramas();
-    }
 }
 
 // Array para almacenar los programas
@@ -72,7 +77,9 @@ function aplicarPrimerAjuste(ident) {
         // Asignar el proceso a la partición libre
         listaParticiones[indiceParticionLibre].estado = 'ocupado';
         listaParticiones[indiceParticionLibre].nombre = proceso.nombre;
-        listaParticiones[indiceParticionLibre].proceso = proceso.identificador;
+        listaParticiones[indiceParticionLibre].proceso = proceso.identificador; 
+        listaParticiones[indiceParticionLibre].porcentaje = ((proceso.tamano / listaParticiones[indiceParticionLibre].tamaño)*100)
+        console.log(listaParticiones[indiceParticionLibre].porcentaje)
         crearParticionesGraficas();
     }
 }
@@ -199,7 +206,7 @@ function agregarPrograma() {
     var textPrograma = parseInt(document.getElementById('textPrograma').value);
     var dataPrograma = parseInt(document.getElementById('dataPrograma').value);
     var bssPrograma = parseInt(document.getElementById('bssPrograma').value);
-    var memoriaPrograma = parseInt(document.getElementById('memoriaPrograma').value);
+    var memoriaPrograma = textPrograma + dataPrograma + bssPrograma + pila + monticulo;
 
     // Validar que los campos no estén vacíos
     if (!nombrePrograma || isNaN(textPrograma) || isNaN(dataPrograma) || isNaN(bssPrograma) || isNaN(memoriaPrograma) || textPrograma < 0 || dataPrograma < 0 || bssPrograma < 0 || memoriaPrograma < 0) {
@@ -269,6 +276,7 @@ function terminarProceso(index) {
             listaParticiones[i].estado = 'libre';
             listaParticiones[i].nombre = '';
             listaParticiones[i].proceso = '';
+            listaParticiones[i].porcentaje = 0;
         }
     }
     procesos.splice(index, 1);
@@ -313,10 +321,10 @@ function crearParticion(){
         let particion = document.createElement("li");
         particion.innerText = parttam;
         lista.appendChild(particion);
-        var parti = {estado: 'libre', tamaño: parttam, proceso: '', nombre: ''}
+        var parti = {estado: 'libre', tamaño: parttam, proceso: '', nombre: '', porcentaje:  0}
         listaParticiones.push(parti);
         var nuevoTamaño = tamdisp -parttam;
-        document.getElementById("part-dispo-text").textContent = nuevoTamaño;
+        document.getElementById("part-dispo-text").textContent = nuevoTamaño;   
     }
 }
 
@@ -343,6 +351,7 @@ function crearParticionesGraficas() {
                 nuevoDiv.innerHTML = `<p>${listaParticiones[i].nombre}</p>`;
                 imgMemoria.appendChild(nuevoDiv);
                 document.getElementById(`n${i}`).style.height = `${tam}%`;
+                // document.getElementById(`n${i}`).style.backgroundImage = `linear-gradient(to bottom, yellow ${parseInt(listaParticiones[i].porcentaje)}%, white ${100 - parseInt(listaParticiones[i].porcentaje)}%)`;
             }
         } else {
             console.error("La lista de particiones está vacía o no está definida.");
@@ -432,10 +441,12 @@ function compactarParticionesDinamicas() {
 
 //funcion para iniciar el simulador, recuadrar esta funcion con la creacicon de las particiones estaticas
 function crearsimulador(){
-    programas = [];
-    listaParticiones = [];
     var estatica = document.getElementById("Estatica");
     if (estatica.checked){
+        programas = [];
+        listaParticiones = [];
+        var SO = {estado: 'ocupado', tamaño: 1048576, proceso: 'SO', nombre: 'Sistema Operativo'}
+        listaParticiones.push(SO);  
         var memoria = 15728640 ;
         var parttam = parseInt(document.getElementById("tamPart").value);
         for (let i = memoria ; i > 0 ; i -= parttam){
@@ -497,8 +508,6 @@ function crearsimulador(){
                     <input type="number" id="dataPrograma" min="0" step="1" required>
                     <label for="bssPrograma">.bss:</label>
                     <input type="number" id="bssPrograma" min="0" step="1" required>
-                    <label for="memoriaPrograma">Memoria a usar:</label>
-                    <input type="number" id="memoriaPrograma" min="0" step="1" required>
                     <button type="button" onclick="agregarPrograma()">Agregar Programa</button>
                 </form>
             </div> 
@@ -508,9 +517,9 @@ function crearsimulador(){
             <!-- Encabezado de la tabla -->
             <thead class="tb-proc-enc">
                 <th>Programa</th>
-                <th>.text</th>
-                <th>.data</th>
-                <th>.bss</th>
+                <th>tamaño codigo</th>
+                <th>tamaño datos inicializados</th>
+                <th>tamaño datos sin inicializar</th>
                 <th>Memoria a usar</th>
                 <th>" "</th>
             </thead>
@@ -541,6 +550,10 @@ function crearsimulador(){
 
 //funcion para volver al inicio
 function volverInicio(){
+    programas = [];
+    listaParticiones = [];
+    var SO = {estado: 'ocupado', tamaño: 1048576, proceso: 'SO', nombre: 'Sistema Operativo'}
+    listaParticiones.push(SO);
     document.getElementById("caja-principal").innerHTML = "";
     document.getElementById("caja-principal").innerHTML =`
     

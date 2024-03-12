@@ -110,12 +110,13 @@ h1{
 /* Modifica el estilo del recuadro de programas */
 .imgPrograma {
     text-align: center;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     width: 100%;
-    padding: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
+    background-size: 100% 2px;
+    background-repeat: no-repeat
 }
 
 .imgPrograma:hover {
@@ -139,6 +140,7 @@ h1{
     text-align: center;
     background-color: yellow;
     border: 1px solid black;
+    border-bottom: 0px;
     width: 100%;
     height: 6.25%;
     display: flex;
@@ -151,11 +153,8 @@ h1{
 .repr-memoria {
     border: 1px solid black;
     height: 95%;
-    width: 200px;
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%;
+    padding: 0px;
 }
 
 /* Añade estilos adicionales para resaltar el encabezado de la memoria */
