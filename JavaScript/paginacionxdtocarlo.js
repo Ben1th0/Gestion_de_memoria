@@ -1,39 +1,53 @@
-// Definir el tamaño de página y el tamaño de memoria
-const PAGE_SIZE = 4096;
-const MEMORY_SIZE = 65536;
-
-// Crear una tabla de páginas
-const pageTable = new Array(MEMORY_SIZE / PAGE_SIZE);
-
-// Implementar el algoritmo de reemplazo de páginas
-// (En este ejemplo se utiliza el algoritmo FIFO)
-let fifoQueue = [];
-
-function replacePage() {
-  const pageToRemove = fifoQueue.shift();
-  // Eliminar la página de la memoria
-  ...
-
-  return pageToRemove;
+// Función para crear un segmento de memoria
+function crearSegmento(id, tamaño) {
+  return {
+    id: id,
+    tamaño: tamaño,
+    datos: new Array(tamaño).fill(null)
+  };
 }
 
-// Implementar la traducción de direcciones
-function translateAddress(virtualAddress) {
-  const pageIndex = virtualAddress / PAGE_SIZE;
-  const pageTableEntry = pageTable[pageIndex];
-
-  if (pageTableEntry.valid) {
-    return pageTableEntry.frame * PAGE_SIZE + virtualAddress % PAGE_SIZE;
+// Función para escribir datos en un segmento
+function escribirSegmento(segmento, indice, valor) {
+  if (indice < segmento.tamaño) {
+    segmento.datos[indice] = valor;
   } else {
-    // Producir un fallo de página
-    ...
+    console.error('Índice fuera de los límites del segmento.');
   }
 }
 
-// Simular la ejecución del programa
-// ...
+// Función para leer datos de un segmento
+function leerSegmento(segmento, indice) {
+  if (indice < segmento.tamaño) {
+    return segmento.datos[indice];
+  } else {
+    console.error('Índice fuera de los límites del segmento.');
+    return null;
+  }
+}
 
-// Ejemplo de acceso a memoria
-const virtualAddress = 12345;
-const physicalAddress = translateAddress(virtualAddress);
-//
+// Función para eliminar un segmento
+function eliminarSegmento(memoria, id) {
+  memoria = memoria.filter(segmento => segmento.id !== id);
+  return memoria;
+}
+
+// Función para mostrar el estado actual de la memoria
+function mostrarEstado(memoria) {
+  memoria.forEach(segmento => {
+    console.log(`Segmento ${segmento.id}:`, segmento.datos);
+  });
+}
+
+// Ejemplo de uso
+let memoria = [];
+memoria.push(crearSegmento('código', 10));
+memoria.push(crearSegmento('datos', 20));
+
+escribirSegmento(memoria[0], 0, 'funcionInicio()');
+escribirSegmento(memoria[1], 0, 'datoImportante');
+
+console.log(leerSegmento(memoria[0], 0)); // Salida: funcionInicio()
+console.log(leerSegmento(memoria[1], 0));  // Salida: datoImportante
+
+mostrarEstado(memoria); // Muestra el estado de todos los segmentos
