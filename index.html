@@ -17,13 +17,15 @@
                 <div class='sub-opciones'><input type='radio' name='particion' id='EstaticaVar'><label for='EstaticaVar'>Particion Estatica Variable</label></div>
                 <div class='sub-opciones'><input type='radio' name='particion' id='Dinamica'><label for='Dinamica'>Particion Dinamica</label></div>
                 <div class='sub-opciones'><input type='radio' name='particion' id='DinamicaCom'><label for='DinamicaCom'>Particion Dinamica compacta</label></div>
+                <div class='sub-opciones'><input type='radio' name='particion' id='Segmentacion'><label for='Segmentacion'>Segmentacion</label></div>
+                <div class='sub-opciones'><input type='radio' name='particion' id='Paginacion'><label for='Paginacion'>Paginacion</label></div>
             </div>                
             <button class='crear' onclick="abrirMiniVentana()">crear</button>
             <div id="miniVentana" class="miniVentana">
                 <div class="contenido">
                     <span class="cerrar" onclick="cerrarMiniVentana()">X</span>
                     <h2>Particionar memoria</h2>
-                    <p>Coloca las dimenciones de la memoria</p>
+                    <p id="texto-particiones">Coloca las dimenciones de la memoria</p>
                     <div class="particiones">
                         <div class="part-creadas">
                             <h3>particiones <br>creadas</h3>
