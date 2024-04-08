@@ -14,6 +14,9 @@ function generarProgramasAutomaticos() {
         let programa3 = { nombre: 'Excel', text: 99542, data: 24245, bss: 7557, memoria: 99542+24245+7557+pila+monticulo  };
         let programa4 = { nombre: 'AutoCAD', text: 115000, data: 123470, bss: 1123, memoria: 115000+123470+1123+pila+monticulo  };
         let programa5 = { nombre: 'Calculadora', text: 12342, data: 1256, bss: 1756, memoria: 12342+1256+1756+pila+monticulo  };
+        let programa6 = { nombre: 'programa6', text: 525000, data: 3224000, bss: 51000, memoria: 525000+3224000+51000+pila+monticulo  };
+        let programa7 = { nombre: 'programa7', text: 590000, data: 974000, bss: 25000, memoria: 590000+974000+25000+pila+monticulo  };
+        let programa8 = { nombre: 'programa8', text: 349000, data: 2150000, bss: 1000, memoria: 349000+2150000+1000+pila+monticulo  };
 
         // Agregar programa al array
         programas.push(programa1);
@@ -21,16 +24,23 @@ function generarProgramasAutomaticos() {
         programas.push(programa3);
         programas.push(programa4);
         programas.push(programa5);
+        programas.push(programa6);
+        programas.push(programa7);
+        programas.push(programa8);
 
     // Actualizar la tabla de procesos
     actualizarTablaProgramas();
 }
+
+//array de bloques libres
+let bloqueslibres = [];
 
 // Array para almacenar los programas
 let programas = [];
 
 // Array para almacenar los procesos
 let procesos = [];
+let progre = [];
 
 // Array para tipodeajuste
 let tipoAjusteSeleccionado = null;
@@ -288,10 +298,19 @@ function aplicarMejorAjuste(ident){
 }
 
 function unificarParticionesLibres(){
-    for(let i = 1; i < listaParticiones.length; i++){
-        if(listaParticiones[i-1].estado == 'libre' && listaParticiones[i].estado == 'libre'){
-            listaParticiones[i-1].tamaño = listaParticiones[i-1].tamaño + listaParticiones[i].tamaño;
-            listaParticiones.splice(i, 1);
+    var indicador = 0;
+    for(let i = 1; i > 0 ;i++){
+        for(let i = 1; i < listaParticiones.length; i++){
+            if(listaParticiones[i-1].estado == 'libre' && listaParticiones[i].estado == 'libre'){
+                listaParticiones[i-1].tamaño = listaParticiones[i-1].tamaño + listaParticiones[i].tamaño;
+                listaParticiones.splice(i, 1);
+                indicador = 1;
+            }
+        }
+        if(indicador == 0){
+            break;
+        }else{
+            indicador = 0;
         }
     }
 }
@@ -378,7 +397,10 @@ function agregarProcesoDesdePrograma(index) {
     var programa = programas[index];
 
     //agregar al grafico
-    var ajuste =  document.getElementById('tipo-ajuste').textContent;
+    if(tipoMemorita == 3){
+        agregarPorSegmentacion(index);
+    }else{
+        var ajuste =  document.getElementById('tipo-ajuste').textContent;
     if (ajuste == 'Primer Ajuste'){
         let ident = Math.random();
         // Agregar el programa a la lista de procesos
@@ -409,6 +431,8 @@ function agregarProcesoDesdePrograma(index) {
     }else{
         alert('aplique un tipo de ajuste');
     }
+    }
+    
 }
 
 // Función para terminar un proceso
@@ -420,10 +444,11 @@ function terminarProceso(index) {
             listaParticiones[i].nombre = '';
             listaParticiones[i].proceso = '';
             listaParticiones[i].porcentaje = 0;
+            listaParticiones[i].color = 'white';
         }
     }
     procesos.splice(index, 1);
-    if(tipoMemorita == 1){
+    if((tipoMemorita == 1) || (tipoMemorita == 3)){
         unificarParticionesLibres();
     }if(tipoMemorita == 2){
         borrarParticionesLibres();
@@ -525,6 +550,10 @@ function crearParticionesGraficas() {
                 nuevoDiv.innerHTML = `<p>${listaParticiones[i].nombre}</p>`;
                 imgMemoria.appendChild(nuevoDiv);
                 document.getElementById(`n${i}`).style.height = `${tam}%`;
+                document.getElementById(`n${i}`).style.backgroundColor = `${listaParticiones[i].color}`;
+                if(i>0){
+                    document.getElementById(`n${i}`).style.fontSize = `2px`;
+                }
                 // document.getElementById(`n${i}`).style.backgroundImage = `linear-gradient(to bottom, yellow ${parseInt(listaParticiones[i].porcentaje)}%, white ${100 - parseInt(listaParticiones[i].porcentaje)}%)`;
             }
         } else {
@@ -687,6 +716,7 @@ function crearsimulador(){
         listaParticiones.push(SO);
         interfaz1();
     }else if(segmentacion.checked){
+        tipoMemorita = 3;
         programas = [];
         listaParticiones = []; 
         var SO = {estado: 'ocupado', tamaño: 1048576, proceso: 'SO', nombre: 'Sistema Operativo'};
@@ -782,6 +812,7 @@ function volverInicio(){
     document.getElementById('caja-principal').style.gridTemplateColumns = '';
      }
 
+//actualizaciones de lab2
 function interfaz1(){
     document.getElementById("caja-principal").innerHTML = "";
     document.getElementById("caja-principal").innerHTML = 
@@ -955,4 +986,159 @@ function interfaz2(){
         </div>
     </div>
     `;
+}
+
+//asignar programa grafico para segmentacion
+
+function agregarPorSegmentacion(index){
+    console.log(programas[index]);
+    var programa = programas[index];
+    var ident = Math.random();
+    var heap = monticulo;
+    var sta = pila;
+        // Agregar el programa a la lista de procesos
+        procesos.push({
+            nombre: programa.nombre,
+            tamano: programa.memoria,
+            identificador: ident
+        });
+
+        progre.push({
+            nombre: programa.nombre,
+            text: programa.text,
+            data: programa.data,
+            bss: programa.bss
+        })
+         
+    var progr = progre[0];
+    console.log(progr);
+    //-------//
+    var particionesNecesarias = [];
+
+    //--para text--//
+    for(let i = 1; i > 0 ;i++){
+        if((progr.text > 0) && (progr.text > limite)){
+            particionesNecesarias.push({
+                tamaño: limite,
+                tipo: "text",
+                color: 'yellow'
+            });
+            progr.text -= limite;
+        }else if((progr.text > 0) && (progr.text < limite)){
+            particionesNecesarias.push({
+                tamaño: progr.text,
+                tipo: "text",
+                color: 'yellow'
+            })
+            progr.text -= limite;
+        }else{
+            break;
+        }
+    }
+    //--para data--//
+    for(let i = 1; i > 0 ;i++){
+        if(progr.data > 0 && progr.data > limite){
+            particionesNecesarias.push({
+                tamaño: limite,
+                tipo: "data",
+                color: 'blue'
+            });
+            progr.data -= limite;
+        }else if(progr.data > 0 && progr.data < limite){
+            particionesNecesarias.push({
+                tamaño: progr.data,
+                tipo: "data",
+                color: 'blue'
+            })
+            progr.data -= limite;
+        }else{
+            break;
+        }
+    }
+    //--para bss--//
+    for(let i = 1; i > 0 ;i++){
+        if(progr.bss > 0 && progr.bss > limite){
+            particionesNecesarias.push({
+                tamaño: limite,
+                tipo: "bss",
+                color: 'red'
+            });
+            progr.bss -= limite;
+        }else if(progr.bss > 0 && progr.bss < limite){
+            particionesNecesarias.push({
+                tamaño: progr.bss,
+                tipo: "bss",
+                color: 'red'
+            })
+            progr.bss -= limite;
+        }else{
+            break;
+        }
+    }
+
+    //-- para heap --//
+    for(let i = 1; i > 0 ;i++){
+        if(heap > 0 && heap > limite){
+            particionesNecesarias.push({
+                tamaño: limite,
+                tipo: "heap",
+                color: 'green'
+            });
+            heap -= limite;
+        }else if(heap > 0 && heap < limite){
+            particionesNecesarias.push({
+                tamaño: heap,
+                tipo: "heap",
+                color: 'green'
+            })
+            heap -= limite;
+        }else{
+            break;
+        }
+    }
+
+    //-- para stack--//
+    for(let i = 1; i > 0 ;i++){
+        if(sta > 0 && sta > limite){
+            particionesNecesarias.push({
+                tamaño: limite,
+                tipo: "stack",
+                color: 'orange'
+            });
+            sta -= limite;
+        }else if(sta > 0 && sta < limite){
+            particionesNecesarias.push({
+                tamaño: sta,
+                tipo: "stack",
+                color: 'orange'
+            })
+            sta -= limite;
+        }else{
+            break;
+        }
+    }
+    // console.log(particionesNecesarias);
+    //-----//
+    for(let i = 0; i< particionesNecesarias.length;i++){
+        for(let j = 0; j < listaParticiones.length; j++){
+            if((listaParticiones[j].estado == 'libre') && (listaParticiones[j].tamaño > particionesNecesarias[i].tamaño)){
+                listaParticiones.splice(j,0,{
+                    estado: 'ocupado', 
+                    tamaño: particionesNecesarias[i].tamaño, 
+                    proceso: ident, 
+                    nombre: progr.nombre, 
+                    tipo: particionesNecesarias[i].tipo,
+                    color: particionesNecesarias[i].color
+                })
+                listaParticiones[j+1].tamaño = (listaParticiones[j+ 1].tamaño - listaParticiones[j].tamaño);
+                console.log(listaParticiones[i]);
+                break;
+            }
+        }
+    }
+    console.log(listaParticiones);
+    actualizarTablaProcesos();
+    crearParticionesGraficas();
+
+    progre = [];
 }
