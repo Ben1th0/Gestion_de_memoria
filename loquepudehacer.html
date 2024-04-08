@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMULADOR SEGMENTACION</title>
+</head>
+<body>
+    <h1>SIMULADOR SEGMENTACION</h1>
+    <label for="segmentNumber">Segment Number:</label>
+    <input type="number" id="segmentNumber">
+    <label for="offset">Offset:</label>
+    <input type="number" id="offset">
+    <button onclick="translateAddress()">Translate Address</button>
+    <div id="result"></div>
+    <h2>Segment Table</h2>
+    <table id="segmentTable">
+        <thead>
+            <tr>
+                <th>Segment Number</th>
+                <th>Base</th>
+                <th>Limit</th>
+                <th>Logical Address</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Tablas que se muestran -->
+        </tbody>
+    </table>
+    <script src="segmentacionxdtocarlo.js"></script>
+</body>
+</html>
