@@ -1,53 +1,62 @@
-// Función para crear un segmento de memoria
-function crearSegmento(id, tamaño) {
-  return {
-    id: id,
-    tamaño: tamaño,
-    datos: new Array(tamaño).fill(null)
-  };
-}
-
-// Función para escribir datos en un segmento
-function escribirSegmento(segmento, indice, valor) {
-  if (indice < segmento.tamaño) {
-    segmento.datos[indice] = valor;
-  } else {
-    console.error('Índice fuera de los límites del segmento.');
+class SimuladorMemoriaPaginacion {
+  constructor(memoriaTotal) {
+    this.memoriaTotal = memoriaTotal;
+    this.memoria = [];
   }
-}
 
-// Función para leer datos de un segmento
-function leerSegmento(segmento, indice) {
-  if (indice < segmento.tamaño) {
-    return segmento.datos[indice];
-  } else {
-    console.error('Índice fuera de los límites del segmento.');
-    return null;
+  // Función para crear una página de memoria
+  crearPagina(id, tamaño) {
+    const pagina = {
+      id: id,
+      tamaño: tamaño,
+      datos: new Array(tamaño).fill(null)
+    };
+    this.memoria.push(pagina);
+    return pagina;
   }
-}
 
-// Función para eliminar un segmento
-function eliminarSegmento(memoria, id) {
-  memoria = memoria.filter(segmento => segmento.id !== id);
-  return memoria;
-}
+  // Función para escribir datos en una página
+  escribirPagina(pagina, indice, valor) {
+    if (indice < pagina.tamaño) {
+      pagina.datos[indice] = valor;
+    } else {
+      console.error('Índice fuera de los límites de la página.');
+    }
+  }
 
-// Función para mostrar el estado actual de la memoria
-function mostrarEstado(memoria) {
-  memoria.forEach(segmento => {
-    console.log(`Segmento ${segmento.id}:`, segmento.datos);
-  });
+  // Función para leer datos de una página
+  leerPagina(pagina, indice) {
+    if (indice < pagina.tamaño) {
+      return pagina.datos[indice];
+    } else {
+      console.error('Índice fuera de los límites de la página.');
+      return null;
+    }
+  }
+
+  // Función para eliminar una página
+  eliminarPagina(id) {
+    this.memoria = this.memoria.filter(pagina => pagina.id !== id);
+  }
+
+  // Función para mostrar el estado actual de la memoria
+  mostrarEstadoMemoria() {
+    this.memoria.forEach(pagina => {
+      console.log(`Página ${pagina.id}:`, pagina.datos);
+    });
+  }
 }
 
 // Ejemplo de uso
-let memoria = [];
-memoria.push(crearSegmento('código', 10));
-memoria.push(crearSegmento('datos', 20));
+const simuladorMemoria = new SimuladorMemoriaPaginacion(16777216);
 
-escribirSegmento(memoria[0], 0, 'funcionInicio()');
-escribirSegmento(memoria[1], 0, 'datoImportante');
+const pagina1 = simuladorMemoria.crearPagina('Página 1', simuladorMemoria.memoriaTotal / 4);
+const pagina2 = simuladorMemoria.crearPagina('Página 2', simuladorMemoria.memoriaTotal / 2);
 
-console.log(leerSegmento(memoria[0], 0)); // Salida: funcionInicio()
-console.log(leerSegmento(memoria[1], 0));  // Salida: datoImportante
+simuladorMemoria.escribirPagina(pagina1, 0, 'funcionInicio()');
+simuladorMemoria.escribirPagina(pagina2, 0, 'datoImportante');
 
-mostrarEstado(memoria); // Muestra el estado de todos los segmentos
+console.log(simuladorMemoria.leerPagina(pagina1, 0)); // Salida: funcionInicio()
+console.log(simuladorMemoria.leerPagina(pagina2, 0)); // Salida: datoImportante
+
+simuladorMemoria.mostrarEstadoMemoria(); // Muestra el estado de todas las páginas
